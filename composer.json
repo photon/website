@@ -1,5 +1,6 @@
 {
     "require": {
-        "photon/photon": "dev-develop"
+        "photon/photon": "dev-develop",
+        "michelf/php-markdown": "1.4.x"
     }
 }

@@ -1,0 +1,5 @@
+{
+    "require": {
+        "photon/photon": "dev-develop"
+    }
+}

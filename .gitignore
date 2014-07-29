@@ -1,1 +1,10 @@
+# Composer deploy folder
 /vendor/*
+
+# Mongrel2
+config.sqlite
+mongrel2/logs/*.log
+mongrel2/run/*.pid
+
+# Editor
+*~

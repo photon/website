@@ -1,12 +1,9 @@
-title: Photon Views
-description:
+By Loïc d'Anterroches, [xhtml.net](http://xhtml.net), 8th of March, 2011
+
+# Photon Views
+
 Views are the core of Photon, it is where the content
 is generated for the clients.
-+++
-author: Loïc d'Anterroches
-authorurl: http://danterroches.org
-date: 8th of March, 2011
-content:
 
 Please excuse me, first you need to know a dirty little secret, I have
 developed for the web, for HPC and even for Windows with the MFC, but

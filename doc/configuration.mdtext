@@ -1,12 +1,9 @@
-title: Configuration of a Project
-description:
+By Loïc d'Anterroches, [xhtml.net](http://xhtml.net), 25th of February, 2011
+
+# Configuration of a Project
+
 The goal of the configuration is just to provide runtime 
 information to the system in form of an associative array.
-+++
-author: Loïc d'Anterroches
-authorurl: http://xhtml.net
-date: 25th of February, 2011
-content:
 
 The configuration of an application with Photon is extremely simple,
 at the top of your PHP code, you load the configuration container

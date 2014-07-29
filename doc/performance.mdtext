@@ -1,13 +1,10 @@
-title: Photon Performance Against PHP as Module
-description: 
+By Loïc d'Anterroches, [xhtml.net](http://xhtml.net), 18th of February, 2011
+
+# Photon Performance Against PHP as Module
+
 Photon is as fast as the baseline PHP of a traditional PHP as a
 module setup.  This means that you can have both ease of development
 with a high quality framework and high performance.
-+++
-author: Loïc d'Anterroches
-authorurl: http://danterroches.org
-date: 18th of February, 2011
-content:
 
 ## Photon Is The Fastest
 

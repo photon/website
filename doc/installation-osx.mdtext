@@ -1,12 +1,8 @@
-title: OSX Installation Guide of Mongrel2 and Photon
-author: Mehdi Kabab
-authorurl: http://pioupioum.fr/developpement/photon-php-installer-mac-os-x-snow-leopard.html
-Keywords: Mac OS X, Installation, Mongrel2
-date: 27th of February, 2011
-description:
+By Mehdi Kabab, [pioupioum.fr](http://pioupioum.fr/developpement/photon-php-installer-mac-os-x-snow-leopard.html), 27th of February, 2011
+
+# OSX Installation Guide of Mongrel2 and Photon
+
 Step by step tutorial on how to install Photon and Mongrel2 with macports.
-+++
-content:
 
 ## Prerequisites
 

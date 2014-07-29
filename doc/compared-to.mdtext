@@ -1,13 +1,10 @@
-title: Comparing Photon to NodeJS, Django, PHP+FastCGI and Erlang
-description:
+By Loïc d'Anterroches, [xhtml.net](http://xhtml.net),  7th of March, 2011
+
+# Comparing Photon to NodeJS, Django, PHP+FastCGI and Erlang
+
 Photon is different than the usual PHP way, but not necessarily that
 different from other systems or frameworks. Here is a list of what
 it the same and what is not.
-+++
-author: Loïc d'Anterroches
-authorurl: http://danterroches.org
-date: 7th of March, 2011
-content:
 
 The key comparison metrics are the following:
 

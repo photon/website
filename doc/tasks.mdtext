@@ -1,14 +1,10 @@
-title: Background Tasks with Photon
-description:
+By Loïc d'Anterroches, [xhtml.net](http://xhtml.net), 20th of February, 2011
+
+# Background Tasks with Photon
+
 Background tasks allow you to perform operations in the background
 to offload process intensive or specialized work. A good example is
 to use a task to manage a chat server.
-+++
-keywords: asynchronous, background operation
-author: Loïc d'Anterroches
-authorurl: http://danterroches.org
-date: 20th of February, 2011
-content:
 
 ## A Task Run Something in the Background
 

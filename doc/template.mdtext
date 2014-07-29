@@ -1,12 +1,9 @@
-title: Photon Template Engine
-description: 
+By Loïc d'Anterroches, [xhtml.net](http://xhtml.net), 9th of March, 2011
+
+# Photon Template Engine
+
 Photon has a high performance template engine with
 autoescaping, inheritance and more.
-+++
-author: Loïc d'Anterroches
-authorurl: http://danterroches.org
-date: 9th of March, 2011
-content:
 
 The **Photon** template engine is very thin and very efficient.
 It compiles your templates to pure PHP code. Any text format

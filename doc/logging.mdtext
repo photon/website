@@ -1,12 +1,8 @@
-title: Logging in Photon Web Service
-author: Loïc d'Anterroches
-authorurl: http://danterroches.org
-date: 5th of March, 2011
-description:
-Log everything, you can always rotate the logs. But the day you 
-have performance problems, you will be happy to have the logs.
-+++
-content:
+By Loïc d'Anterroches, [xhtml.net](http://xhtml.net), 5th of March, 2011
+
+# Logging in Photon Web Service
+
+Log everything, you can always rotate the logs. But the day you have performance problems, you will be happy to have the logs.
 
 ## Know Where You Are
 

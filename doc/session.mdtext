@@ -1,11 +1,8 @@
-title: Photon Session Management
-author: Loïc d'Anterroches
-authorurl: http://xhtml.net
-date: 18th of February, 2011
-description:
+By Loïc d'Anterroches, [xhtml.net](http://xhtml.net), 18th of February, 2011
+
+# Photon Session Management
+
 How are the sessions managed within Photon.
-+++
-content:
 
 ## Management of the Client Session
 

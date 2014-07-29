@@ -1,15 +1,12 @@
-title: Application Data Storage
-description:
+By Loïc d'Anterroches, [xhtml.net](http://xhtml.net), 25th of February, 2011
+
+# Application Data Storage
+
 Photon does not inforce a given storage engine. We like MongoDB, but you can
 use any storage you like, from RAM to text files, through whatever RDBMS or 
 NoSQL system you want. Here are the principles you should follow in your
 application to follow the Photon storage principles.
-+++
-author: Loïc d'Anterroches
-authorurl: http://xhtml.net
-date: 25th of February, 2011
-keywords: database, storage
-content:
+
 
 ## Accept That Not Everybody Like Your Storage System
 

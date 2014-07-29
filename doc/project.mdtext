@@ -1,12 +1,8 @@
-title: Project File Structure
-author: Loïc d'Anterroches
-authorurl: http://danterroches.org
-date: 18th of February, 2011
-description:
-Organization of a Photon project. This includes the directory and file
-structure.
-+++
-content:
+By Loïc d'Anterroches, [xhtml.net](http://xhtml.net), 18th of February, 2011
+
+# Project File Structure
+
+Organization of a Photon project. This includes the directory and file structure.
 
 ## Everything Is Done By Convention
 

@@ -1,15 +1,8 @@
-title: Authentication Mechanisms
-author: Loïc d'Anterroches
-authorurl: http://xhtml.net
-date: 12th of March, 2011
-description:
-Answering the "Who are you?" question the best way
-we can.
-+++
-content:
+By Loïc d'Anterroches, [xhtml.net](http://xhtml.net), 12th of March, 2011  
 
+# Authentication Mechanisms
 
-
+Answering the "Who are you?" question the best way we can.
 
 ## Low Level Information Flux
 

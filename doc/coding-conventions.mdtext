@@ -1,12 +1,9 @@
-title: Coding Standards and Conventions
-author: Loïc d'Anterroches
-authorurl: http://danterroches.org
-date: 18th of February, 2011
-description:
+By Loïc d'Anterroches, [xhtml.net](http://xhtml.net), 18th of February, 2011
+
+# Coding Standards and Conventions
+
 The coding standards and conventions of Photon. How to write some nice 
 looking and well structured code.
-+++
-content:
 
 ## The Conventions Are Simple
 

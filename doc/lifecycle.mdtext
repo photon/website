@@ -1,12 +1,8 @@
-title: Photon Life Cycle
-description:
-We will try here to explain the life cycle of a request handled by
-Photon. This is a work in progress.
-+++
-author: Loïc d'Anterroches
-authorurl: http://xhtml.net
-date: 25th of February, 2011
-content:
+By Loïc d'Anterroches, [xhtml.net](http://xhtml.net), 25th of February, 2011
+
+# Photon Life Cycle
+
+We will try here to explain the life cycle of a request handled by Photon. This is a work in progress.
 
 ## Life Cycle of the Photon Application Server
 

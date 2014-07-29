@@ -1,11 +1,8 @@
-title: Scaling a Photon Web Service
-author: Loïc d'Anterroches
-authorurl: http://danterroches.org
-date: 5th of March, 2011
-description:
+By Loïc d'Anterroches, [xhtml.net](http://xhtml.net), 5th of March, 2011
+
+# Scaling a Photon Web Service
+
 Key points and tips on how to scale your web service with Photon. 
-+++
-content:
 
 ## Scaling is Hard but Fun
 

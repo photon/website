@@ -1,12 +1,9 @@
-title: Photon URL Map Definition
-description:
+By Loïc d'Anterroches, [xhtml.net](http://xhtml.net), 8th of March, 2011
+
+# Photon URL Map Definition
+
 The URL map is doing the correspondance between the URL of your
 website and the views in your application.
-+++
-author: Loïc d'Anterroches
-authorurl: http://danterroches.org
-date: 8th of March, 2011
-content:
 
 When a request comes from Mongrel2 to Photon, Mongrel2 has already
 done some work for us by extracting the path of the request and

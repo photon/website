@@ -1,0 +1,15 @@
+{extends 'docbase.html'}
+
+{block title}{$title} - Documentation - Photon, High Performance PHP &amp; Mongrel2 Framework{/block}
+
+{block titlepage}<h1>{$title}</h1>{/block}
+
+{block body}{$content|safe}{/block}
+
+{block sidebar}
+<div id="docpagedesc">
+<p>{$description}</p>
+<p>By <a href="{$authorurl}">{$author}</a>,<br />{$date}</p>
+</div>
+{superblock}
+{/block}

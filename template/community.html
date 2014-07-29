@@ -1,0 +1,40 @@
+{extends 'base.html'}
+{block title}Community - {superblock}{/block}
+{block titlepage}<h1>Photon Community</h1>
+{assign $inCommunity = true}
+{/block}
+{block body}
+
+<h2>We have fun, we move fast</h2>
+
+<p>
+To get in touch with the friendly and open minded community
+of <strong>Photon</strong> users, you can:
+</p>
+
+<ul>
+<li>subscribe to the mailing list: <strong>photon.users@librelist.com</strong>, to subscribe, just send an email with <em>Hello</em> in the body to the list and follow the instructions. The <a href="http://librelist.com/browser/photon.users/">Photon list archives</a> are available too.</li>
+<li>join the <strong>#photonproject</strong> IRC channel on the <em>freenode</em> servers.</li>
+</ul>
+
+<h3>Development Process</h3>
+
+<p>
+The <strong>Photon</strong> code base is small, well tested and easy
+to understand as without magic, complicated class inheritance,
+interfaces, etc. This means that you can start hacking into it really
+fast, this also means we, as core developers, can easily evaluate the
+quality of your work. At the end, this means that our policy is:
+</p>
+
+<p>
+<blockquote>If you submit a patch which is good to be applied <em>as it is</em> on the current develop branch, you are granted write access to the repository.</blockquote>
+</p>
+
+<p>
+Yes, we are very liberal in giving write access to the repository and
+this works very well. We use <a href="https://github.com/nvie/gitflow">gitflow</a> to work with git and the project is <a href="http://projects.ceondo.com/p/photon/">hosted in an Indefero forge</a>.
+</p>
+
+{/block}
+{block sidebar}{* no side bar *}{/block}

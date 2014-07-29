@@ -1,0 +1,56 @@
+{extends 'base.html'}
+{block title}Documentation - {superblock}{/block}
+{block titlepage}<h1>Photon Documentation</h1>
+{assign $inDoc = true}{/block}
+
+
+
+{block body}
+
+<h2>Documentation Topics and Tutorials</h2>
+
+
+<p>
+The documentation is a work in progress and at the moment it may not
+fully reflect the code base as the code is moving really fast.
+</p>
+
+<ul>
+<li>First, learn what is a <a href="{url 'photonweb_autodoc', array('project')}">Photon project and its structure</a>.</li>
+<li>Check how to <a href="{url 'photonweb_autodoc', array('configuration')}">configure your project</a>.</li>
+<li>Understand the <a href="{url 'photonweb_autodoc', array('lifecycle')}">life cycle of a request</a>.</li>
+<li>The <a href="{url 'photonweb_autodoc', array('principles')}">Photon principles</a> are the base against which new features are evaluated.</li>
+<li>The <a href="{url 'photonweb_autodoc', 'urls'}">URL map</a>, to map a path to a view.</li>
+<li>The <a href="{url 'photonweb_autodoc', 'commandline'}">command line utility</a> to start/stop Photon or create new projects.</li>
+<li>The <a href="{url 'photonweb_autodoc', 'template'}">high performance templating engine</a> to write HTML the easy way.</li>
+<li><a href="{url 'photonweb_autodoc', array('session')}">Session handling</a>.</li>
+<li><a href="{url 'photonweb_autodoc', array('storage')}">Model storage</a>.</li>
+<li><a href="{url 'photonweb_autodoc', array('testing')}">Testing</a> of your application.</li>
+<li><a href="{url 'photonweb_autodoc', 'tasks'}">Background tasks</a> to run asynchronous work or special services.</li>
+</ul>
+
+<h2>On the To-Do-List</h2>
+
+<ul>
+<li>Add events and hooks.</li>
+<li>Add MongoDB and in memory session handlers.</li>
+<li>Add ACL system with clients/users and groups with MongoDB and text based ACL storages.</li>
+</ul>
+
+<p>
+The goal is as always, to keep the core of Photon small and easy to
+understand. The specialized components will not be integrated within
+Photon but delivered as <em>Particles</em> of a Photon
+project. <em>www.particles-project.com</em> will be the host of a
+large collection of high quality components.
+</p>
+
+<p>
+Each time a storage is needed to handle a specific task, for example
+session, acl storage, etc. At least two reference backends
+implementation will be provided. This is to have a clean API and serve
+as an example for you to create your own storage layers. 
+</p>
+
+{/block}
+{block sidebar}{* no side bar *}{/block}

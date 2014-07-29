@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>{block title}Photon, High Performance PHP &amp; Mongrel2 Framework{/block}</title>
+<meta name="description" content="A high performance PHP5 framework using Mongrel2 and ZeroMQ.">
+<link href="http://fonts.googleapis.com/css?family=Josefin+Sans:bold" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="{url 'photonweb_assets', 'css/merged.css'}" />
+{literal}
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-408943-17']);
+  _gaq.push(['_setDomainName', '.photon-project.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+{/literal}</head>
+<body>
+
+<div class="container_12">
+  <div class="grid_9"><div class="wrapper">
+      {include 'tabs.html'}
+      {block titlepage}{/block}
+      {block body}{/block}
+  </div></div>
+  <div class="grid_3">
+    {block sidebar}
+    <div id="docmenu">
+      <h4>Other Documentation</h4>
+      <p>
+	&raquo;&nbsp;<a href="{url 'photonweb_autodoc', array('project')}">Project structure</a><br />
+	&raquo;&nbsp;<a href="{url 'photonweb_autodoc', array('coding-conventions')}">Coding standards</a><br />
+	&raquo;&nbsp;<a href="{url 'photonweb_autodoc', array('configuration')}">configuration</a><br />
+	&raquo;&nbsp;<a href="{url 'photonweb_autodoc', array('lifecycle')}">lifecycle</a><br />
+	&raquo;&nbsp;<a href="{url 'photonweb_autodoc', array('principles')}">principles</a><br />
+	&raquo;&nbsp;<a href="{url 'photonweb_autodoc', array('session')}">session</a><br />
+	&raquo;&nbsp;<a href="{url 'photonweb_autodoc', array('storage')}">storage</a><br />
+{*	&raquo;&nbsp;<a href="{url 'photonweb_autodoc', array('structure')}">structure</a><br /> *}
+	&raquo;&nbsp;<a href="{url 'photonweb_autodoc', array('testing')}">testing</a><br />
+{*	&raquo;&nbsp;<a href="{url 'photonweb_autodoc', array('stay-lean')}">Application scaling</a><br /> *}
+	&raquo;&nbsp;<a href="{url 'photonweb_autodoc', array('tasks')}">Background Tasks</a><br />
+	&raquo;&nbsp;<a href="{url 'photonweb_autodoc', array('performance')}">Performance benchmark</a><br />
+      </p>
+    </div>
+    {/block}
+  </div>
+</div>
+
+<div id="footer">
+  <div class="container_12">
+    <div class="grid_9 suffix_3">
+      <p>©&nbsp;2014 <a href="{url 'photonweb_about'}">Céondo Ltd</a> and contributors.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

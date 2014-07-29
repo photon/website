@@ -1,0 +1,60 @@
+{extends 'base.html'}
+{block title}About - {superblock}{/block}
+{block titlepage}<h1>About Photon, The High Performance PHP Framework</h1>
+{assign $inAbout = true}
+{/block}
+{block body}
+
+<h2><strong>Photon</strong> born from scientific high performance</h2>
+
+<p>
+<strong>Photon</strong> started in 2010 with the redesign of the <a href="http://www.chemeo.com">Cheméo chemical properties search engine</a>. This search engine is not only a standard search engine but also a calculation engine. To run properly, Cheméo uses:
+</p>
+
+<ul>
+<li><strong>MongoDB</strong> as a backend.</li>
+<li><strong>Python</strong> to parse and import data.</li>
+<li><strong>R</strong> to perform statistical analysis and model development (linear and non linear models).</li>
+<li><strong>PHP</strong> as a glue language to serve the web interface.</li>
+</ul>
+
+<p>
+Researchers using Cheméo are pushing and retrieving job all day long,
+at the end, the traditionnal push a job, put in the queue, get a
+service pulling out of the queue the job, send it to R and push back
+the results in the database and finally get the information to the end
+user that the job completed approach was a bit of a hack.
+</p>
+<p>
+Enters <strong>ZeroMQ</strong>, one can easily dispatch jobs in
+queues, subcribe to the answers, nice but nothing new. Ok brokerless,
+this makes it easier. Enters <strong>Mongrel2</strong>, bring the
+power of the easy message passing paradigm of ZeroMQ from the client
+all the way to the backend. An homogeneous stack. This was clear,
+after a decade of web application development that it was the way to
+go.
+</p>
+
+<p>
+For the story, the name <strong>Photon</strong> was found
+by <a href="http://pioupioum.fr/">Mehdi Kabab</a>. Most of the code is
+lifted from the previous <a href="http://pluf.org">Pluf framework</a>
+which was already one of the fastest.
+</p>
+
+<h2>Who is behind <strong>Photon</strong>?</h2>
+
+<p>
+<strong>Photon</strong> is a project maintained by Loïc d'Anterroches
+for <a href="http://www.ceondo.com">Céondo&nbsp;Ltd</a>. 
+<strong>Photon</strong> is licensed under the LGPL making it
+easy to integrate the code in other open source projects or closed
+source commercial applications.
+</p>
+
+<p>
+<a href="http://www.ceondo.com">Céondo&nbsp;Ltd</a> is a consultancy founded in 2007 to provide services to the chemical and pharmaceutical industry.
+</p>
+
+{/block}
+{block sidebar}{* no side bar *}{/block}

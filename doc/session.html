@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> - Documentation - Photon, High Performance PHP &amp; Mongrel2 Framework</title>
+<meta charset="utf-8">
+<meta name="description" content="A high performance PHP5 framework using Mongrel2 and ZeroMQ.">
+<link href="http://fonts.googleapis.com/css?family=Josefin+Sans:bold" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="../media/css/merged.css" />
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-408943-17']);
+  _gaq.push(['_setDomainName', '.photon-project.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="container_12">
+  <div class="grid_9"><div class="wrapper">
+      <div class="tabs">
+<ul>
+<li><a href="../index.html">Home</a></li>
+<li><a href="../download.html">Download</a></li>
+<li class="active"><a href="../doc.html">Documentation</a></li>
+<li><a href="../community.html">Community</a></li>
+<li><a href="../about.html">About</a></li>
+</ul>
+</div>
+
+      
+      <p>By Loïc d'Anterroches, <a href="http://xhtml.net">xhtml.net</a>, 18th of February, 2011</p>
+
+<h1>Photon Session Management</h1>
+
+<p>How are the sessions managed within Photon.</p>
+
+<h2>Management of the Client Session</h2>
+
+<p>A client session in a disconnected protocol like HTTP is always a bit
+messy to manage. That is, you never know when the client is not
+anymore "here" because the client is never really connected. Usually a
+session stops after a timeout. The timeout can be few minutes or
+several years, it usually depends on the life the cookie tracking the
+session. The problem is that sometimes, you do not want to use cookies
+to track user sessions, for example, you use directly the HTTP
+authentification mechanism or matching based on the ip address and
+some unique information about the client (User agent, screen
+resolution, etc. this method is known as finger printing).</p>
+
+<p>So, to have good session management, one need a flexible way to know
+in which session the current client request is.</p>
+
+<p>The flow is basically, the following:</p>
+
+<ol>
+<li>Client connects to server and send information with the request;</li>
+<li>From the information, the server deduct a session unique identifier;</li>
+<li>From the unique id, the server loads the corresponding session data;</li>
+<li>The session data is associated to the request.</li>
+</ol>
+
+<p>If at step 3, no session data are found, the server can create a new
+empty session or consider no session at all.</p>
+
+<h2>Relation between Session, User, Authentication, etc.</h2>
+
+<p>The role of a session is to store a minimal amount of transient
+information related to the client. The purpose is not to store long
+term data, for example, the session information could be fully stored
+in cookies or in volatile memory. The only effect of loosing session
+data should not be worse than logging out the user if logged in,
+losing possible A/B testing information or other related minor stuff.</p>
+
+<h3>Examples of session usage</h3>
+
+<ul>
+<li>Store the id of the user after login;</li>
+<li>Store A/B test information;</li>
+<li>Store website customization, like font size, language, etc.</li>
+</ul>
+
+<h2>Default Photon Session Storage</h2>
+
+<p>Photon has two storages for the session data by default with both of
+them using a cookie to store the session id once defined.</p>
+
+<h3>Cookie Storage</h3>
+
+<p>All the data are stored in signed cookies. The system is smart enough
+to limit the data transfer and avoid sending too many cookies.</p>
+
+<h3>In Memory Storage</h3>
+
+<p>The data is stored in an in process storage, this means that you can
+have only one Photon process running for the session system to work at
+the moment as the data are not synchronized between the
+processes. This could be added in the future, but it is most likely
+better to just put the data in MongoDB or Memcached if you really need
+something like that.</p>
+
+  </div></div>
+  <div class="grid_3">
+    
+    <div id="docmenu">
+      <h4>Other Documentation</h4>
+      <p>
+	&raquo;&nbsp;<a href="project.html">Project structure</a><br />
+	&raquo;&nbsp;<a href="coding-conventions.html">Coding standards</a><br />
+	&raquo;&nbsp;<a href="configuration.html">configuration</a><br />
+	&raquo;&nbsp;<a href="lifecycle.html">lifecycle</a><br />
+	&raquo;&nbsp;<a href="principles.html">principles</a><br />
+	&raquo;&nbsp;<a href="session.html">session</a><br />
+	&raquo;&nbsp;<a href="storage.html">storage</a><br />
+
+	&raquo;&nbsp;<a href="testing.html">testing</a><br />
+
+	&raquo;&nbsp;<a href="tasks.html">Background Tasks</a><br />
+	&raquo;&nbsp;<a href="performance.html">Performance benchmark</a><br />
+      </p>
+    </div>
+    
+  </div>
+</div>
+
+<div id="footer">
+  <div class="container_12">
+    <div class="grid_9 suffix_3">
+      <p>©&nbsp;2014 <a href="../about.html">Céondo Ltd</a> and contributors.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> - Documentation - Photon, High Performance PHP &amp; Mongrel2 Framework</title>
+<meta charset="utf-8">
+<meta name="description" content="A high performance PHP5 framework using Mongrel2 and ZeroMQ.">
+<link href="http://fonts.googleapis.com/css?family=Josefin+Sans:bold" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="../media/css/merged.css" />
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-408943-17']);
+  _gaq.push(['_setDomainName', '.photon-project.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="container_12">
+  <div class="grid_9"><div class="wrapper">
+      <div class="tabs">
+<ul>
+<li><a href="../index.html">Home</a></li>
+<li><a href="../download.html">Download</a></li>
+<li class="active"><a href="../doc.html">Documentation</a></li>
+<li><a href="../community.html">Community</a></li>
+<li><a href="../about.html">About</a></li>
+</ul>
+</div>
+
+      
+      <p>By Loïc d'Anterroches, <a href="http://xhtml.net">xhtml.net</a>, 18th of February, 2011</p>
+
+<h1>Photon Principles</h1>
+
+<p>The core priorities of Photon.</p>
+
+<h2>Photon Principles</h2>
+
+<p>The core priorities of the Photon project are:</p>
+
+<ul>
+<li>Speed.</li>
+<li>Ease of development.</li>
+</ul>
+
+<p>Starting version 1.0 speed regressions will not be allowed. That is,
+each new version of Photon will have to be at least as fast as the
+previous if not better for a set of standardized tests.</p>
+
+<h2>Technology</h2>
+
+<p>Daemon. Yes, a daemon in PHP. This works perfectly well as it is used
+in combination with Mongrel2. Mongrel2 allows us to start/stop daemons
+in PHP extremely easily without disruption of the requests. For
+example, you can set your daemon to shut itself down after 500
+requests or after reaching a certain level of memory consumption. You
+let the mongrel2 process supervisor restart the process (it is PHP so
+it is extremely fast) and you just enjoy automatic cleaning of the
+memory leaks while getting an extremely robust system.</p>
+
+<p>Depending on your system (that is, if you have many cores) you can run
+many backend PHP processes to fully use your cores and get the maximum
+out of your system. You can also have a smart way to start/stop PHP
+backend processes depending on the load (you can even start them on
+other systems).</p>
+
+<h2>Methodology</h2>
+
+<p>In memory. The goal is to hit the disk only when really needed. So all
+the tradeoffs are towards putting more in memory and have less disks
+access and system calls.</p>
+
+<p>Cryptography to allow stateless communication (signed cookies) and
+permit authentication without the need to hit the database or even
+open a connection to the database.</p>
+
+<p>Smart "core" objects which are database independent even so most of
+the code is structured to take benefit of MongoDB.</p>
+
+<p>MongoDB, because it is fast and nicely answers our needs:</p>
+
+<ul>
+<li>Fast development of new models.</li>
+<li>No real needs of migrations, they can be handled at the code level on a running system.</li>
+<li>Memory mapped, that is, no disk access when the dataset is small.</li>
+</ul>
+
+<p>Use PHP. This may be a surprising remark, but most of the frameworks
+tend to reinvent the PHP builtin functions and classes, just don't do
+it. Use PHP as much as possible, this is faster and safer on the long
+run.</p>
+
+<h2>Critics</h2>
+
+<p>It Sucks, I Cannot Use It On Shared Hosting. Yes, but the goal here is
+to provide a high performance PHP framework for websites with
+performance constraints. If you are on a shared hosting, you would be
+better served with a already very fast framework like Pluf.</p>
+
+<p>A daemon in PHP, PHP is a memory sieve, so we can forget about
+it. Already the fast-cgi approach has a per children request limit
+(500 by default) to kill and restart a children after a while to plug
+the memory leaks. So, this is the same approach.</p>
+
+<p>ømq is another piece of infrastructure we do not need. Yes and no, the
+wonder of ømq is that we can even use it to dispatch the requests to
+other processes (Python, Ruby, Java) to offload some of the work to
+specialized systems.</p>
+
+  </div></div>
+  <div class="grid_3">
+    
+    <div id="docmenu">
+      <h4>Other Documentation</h4>
+      <p>
+	&raquo;&nbsp;<a href="project.html">Project structure</a><br />
+	&raquo;&nbsp;<a href="coding-conventions.html">Coding standards</a><br />
+	&raquo;&nbsp;<a href="configuration.html">configuration</a><br />
+	&raquo;&nbsp;<a href="lifecycle.html">lifecycle</a><br />
+	&raquo;&nbsp;<a href="principles.html">principles</a><br />
+	&raquo;&nbsp;<a href="session.html">session</a><br />
+	&raquo;&nbsp;<a href="storage.html">storage</a><br />
+
+	&raquo;&nbsp;<a href="testing.html">testing</a><br />
+
+	&raquo;&nbsp;<a href="tasks.html">Background Tasks</a><br />
+	&raquo;&nbsp;<a href="performance.html">Performance benchmark</a><br />
+      </p>
+    </div>
+    
+  </div>
+</div>
+
+<div id="footer">
+  <div class="container_12">
+    <div class="grid_9 suffix_3">
+      <p>©&nbsp;2014 <a href="../about.html">Céondo Ltd</a> and contributors.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

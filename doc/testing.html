@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> - Documentation - Photon, High Performance PHP &amp; Mongrel2 Framework</title>
+<meta charset="utf-8">
+<meta name="description" content="A high performance PHP5 framework using Mongrel2 and ZeroMQ.">
+<link href="http://fonts.googleapis.com/css?family=Josefin+Sans:bold" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="../media/css/merged.css" />
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-408943-17']);
+  _gaq.push(['_setDomainName', '.photon-project.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="container_12">
+  <div class="grid_9"><div class="wrapper">
+      <div class="tabs">
+<ul>
+<li><a href="../index.html">Home</a></li>
+<li><a href="../download.html">Download</a></li>
+<li class="active"><a href="../doc.html">Documentation</a></li>
+<li><a href="../community.html">Community</a></li>
+<li><a href="../about.html">About</a></li>
+</ul>
+</div>
+
+      
+      <p>By Loïc d'Anterroches, <a href="http://xhtml.net">xhtml.net</a>, 18th of February, 2011</p>
+
+<h1>Testing a Photon Component, Application or Project</h1>
+
+<p>Automated testing improves the software quality by preventing regressions
+in the code. After and while implementing new features, you create and run
+the software unit tests to ensure that you do not break anything and that
+the software runs as expected. Photon provides an easy way to run your tests.</p>
+
+<h2>Introduction</h2>
+
+<p>Software testing is a very large field but the goal is always the
+same, getting a software with the minimum number of bugs and doing
+what it is supposed to do.</p>
+
+<p><strong>Photon</strong> provides you with some tools to help you perform some of
+the testing of your software, the tools covers:</p>
+
+<ul>
+<li>Unit testing with <a href="http://www.phpunit.de/manual/3.5/en/index.html">PHPUnit</a>;</li>
+<li>Code coverage analysis with <a href="http://www.phpunit.de/manual/3.5/en/index.html">PHPUnit</a> and <a href="http://xdebug.org/">X-Debug</a>;</li>
+<li>Continuous integration (planned);</li>
+<li>Performance analysis.</li>
+</ul>
+
+<p>You will need to manage yourself all the end user testing and in
+browser testing.</p>
+
+<h2>How to Run the Unit Tests</h2>
+
+<p>The unit tests with <strong>Photon</strong> are conventional <a href="http://www.phpunit.de/manual/3.5/en/index.html">PHPUnit</a>
+tests. Go in project folder, where the <code>config.test.php</code> is available
+and simply run:</p>
+
+<pre><code>$ hnu selftest
+Photon 0.0.1 by Loïc d'Anterroches and contributors.
+Using PHPUnit 3.5.5 by Sebastian Bergmann.
+
+............................................................  60 / 117
+.........................................................
+
+Time: 3 seconds, Memory: 10.25Mb
+
+OK (117 tests, 186 assertions)
+
+Writing code coverage data to XML file, this may take a moment.
+Code coverage 1329/1338 (99.33%)
+</code></pre>
+
+<p>You see here that it automatically find the tests, run them and
+perform a code coverage analysis of your code. In this case, all the
+tests were ok but the code coverage is not good, it should be 100%.</p>
+
+<h2>How to Write the Unit Tests</h2>
+
+<p>First you need to know a bit <a href="http://www.phpunit.de/manual/3.5/en/index.html">PHPUnit</a>, because this is the
+framework used to write the tests. The choice of <em>PHPUnit</em> was
+influenced by the active development and ecosystem around this
+framework. Basically, this is the standard unit testing library for
+PHP and it had the nice idea to decrease its level of bloat for the
+programmers in the last release.</p>
+
+<p>The simplest test is a <code>tests.php</code> file in your application folder,
+for example: <code>yourproject\apps\helloworld\tests.php</code>. Just put:</p>
+
+<pre><code>&lt;?php
+namespace helloworld\tests;
+class MySimpleTest extends \PHPUnit_Framework_TestCase
+{
+    /**
+     * This will load the test configuration for your tests.
+     */
+    public function setUp()
+    {
+        \photon\test\Config::load();
+    }
+
+    /**
+     * Simply test that foo returns true.
+     *
+     * It does not try to retrieve the data afterwards.
+     */
+    public function testHelloFoo()
+    {
+        $this-&gt;assertEquals(true, \helloworld\hello\Base::foo('yeah'));
+    }
+
+    /**
+     * Simple failed test.
+     */
+    public function testHelloFailed()
+    {
+        $this-&gt;assertEquals(true, false);
+    }
+}
+</code></pre>
+
+<p>Then run:</p>
+
+<pre><code>$ hnu runtests
+</code></pre>
+
+<p>and enjoy the testing. What you need to notice is:</p>
+
+<ul>
+<li>you extend <code>\PHPUnit_Framework_TestCase</code> and not
+<code>PHPUnit_Framework_TestCase</code>. The backslash in front is important as
+the class lives in the global namespace.</li>
+<li>you can also have more test namespaces, as long as they are sub
+namespaces of <code>yourapplication\tests</code> and the files in the
+<code>yourproject/apps/yourapplication/tests/</code> folder.</li>
+<li>you need to load the configuration of your project in the <code>setUp()</code>
+call.</li>
+</ul>
+
+<p>At the end, you write your tests exactly as you would write them with
+<a href="http://www.phpunit.de/manual/3.5/en/index.html">PHPUnit</a>. You can even run <em>PHPUnit</em> yourself from the
+command line to test your application. This is very important to allow
+you to reuse code from other projects into your own <strong>Photon</strong>
+projects. That is, <strong>Photon</strong> will not force you to rewrite your tests
+just to go well with it. <strong>Photon</strong> is just bootstrapping <em>PHPUnit</em>
+for you.</p>
+
+<h2>Complex Unit Tests</h2>
+
+<p>In the real world, unit tests need to interact with your database,
+other web services and maybe other ØMQ components. This means that you
+need to provide your unit tests with some special configuration. You may also want to run some complex operations at the start of the tests.</p>
+
+<p>By default, <strong>Photon</strong> uses:</p>
+
+<ul>
+<li><code>config.test.php</code> file in your project folder for your project configuration;</li>
+<li><code>photon/testbootstrap.php</code> to setup the auto loading of the classes and load your configuration.</li>
+</ul>
+
+<p>You can use different configuration files, to run your tests with
+different setup, by using the <code>--conf</code> option, for example:
+<code>--conf=other/config.test.php</code>. For a small level of security, if the
+configuration file is named <code>config.php</code> the tests will not run. This
+is just to avoid you the bad luck of running your tests with your
+production settings by mistake...</p>
+
+<p>You can use a different bootstrap file with the
+<code>--bootstrap=path/to/bootstrap.php</code> option.</p>
+
+<h2>Self Testing of Photon</h2>
+
+<p>To test your <strong>Photon</strong> installation, you can run the self test procedure:</p>
+
+<pre><code>$ hnu selftest
+</code></pre>
+
+<p>if you find a bug in <strong>Photon</strong>, please run the self test procedure
+and if you can write a test to showcase the bug, then, you are going
+to make the developers very happy!</p>
+
+  </div></div>
+  <div class="grid_3">
+    
+    <div id="docmenu">
+      <h4>Other Documentation</h4>
+      <p>
+	&raquo;&nbsp;<a href="project.html">Project structure</a><br />
+	&raquo;&nbsp;<a href="coding-conventions.html">Coding standards</a><br />
+	&raquo;&nbsp;<a href="configuration.html">configuration</a><br />
+	&raquo;&nbsp;<a href="lifecycle.html">lifecycle</a><br />
+	&raquo;&nbsp;<a href="principles.html">principles</a><br />
+	&raquo;&nbsp;<a href="session.html">session</a><br />
+	&raquo;&nbsp;<a href="storage.html">storage</a><br />
+
+	&raquo;&nbsp;<a href="testing.html">testing</a><br />
+
+	&raquo;&nbsp;<a href="tasks.html">Background Tasks</a><br />
+	&raquo;&nbsp;<a href="performance.html">Performance benchmark</a><br />
+      </p>
+    </div>
+    
+  </div>
+</div>
+
+<div id="footer">
+  <div class="container_12">
+    <div class="grid_9 suffix_3">
+      <p>©&nbsp;2014 <a href="../about.html">Céondo Ltd</a> and contributors.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

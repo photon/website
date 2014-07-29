@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> - Documentation - Photon, High Performance PHP &amp; Mongrel2 Framework</title>
+<meta charset="utf-8">
+<meta name="description" content="A high performance PHP5 framework using Mongrel2 and ZeroMQ.">
+<link href="http://fonts.googleapis.com/css?family=Josefin+Sans:bold" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="../media/css/merged.css" />
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-408943-17']);
+  _gaq.push(['_setDomainName', '.photon-project.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="container_12">
+  <div class="grid_9"><div class="wrapper">
+      <div class="tabs">
+<ul>
+<li><a href="../index.html">Home</a></li>
+<li><a href="../download.html">Download</a></li>
+<li class="active"><a href="../doc.html">Documentation</a></li>
+<li><a href="../community.html">Community</a></li>
+<li><a href="../about.html">About</a></li>
+</ul>
+</div>
+
+      
+      <h1>Internationalisation and localisation in your code and templates</h1>
+
+<blockquote>
+  <p>WARNING: THIS DOCUMENTATION HAS NOT BEEN UPDATED FOR PHOTON YET,
+  BUT THE PRINCIPLES ARE THE SAME.</p>
+</blockquote>
+
+<p>The internationalization (also known as i18n) and localization are an
+easy step with <strong>Pluf</strong> as long as you start from the beginning to
+think about it.</p>
+
+<p>Learn more about <a href="http://en.wikipedia.org/wiki/Internationalization_and_localization">internationalization on Wikipedia</a>.</p>
+
+<p>What is really important to note, is that you can already apply all
+the following steps to make your code translation ready and translate
+only later. In fact, you should <strong>definitely have a translation ready code</strong> 
+as the work to do so is small if done from the very beginning.</p>
+
+<h2>In your configuration file</h2>
+
+<p>You need to provide the list of languages supported by your
+application and load the translation middleware. The translation
+middleware <code>Pluf_Middleware_Translation</code> must be loaded just after the
+session middleware if you are using it.</p>
+
+<p>For example:</p>
+
+<pre><code>$cfg['languages'] = array('en', 'fr', 'fr_QC', 'es');
+$cfg['middleware_classes'] = array(
+     'Pluf_Middleware_Session',
+     'Pluf_Middleware_Translation',
+);
+</code></pre>
+
+<p>The translation middleware can use session data to find which language
+is to be returned to the user, that is why you need to put it after
+the session middleware.</p>
+
+<p>The first available language in the language list, here <code>en</code> (English)
+will be the default language of the application if no other languages
+match the preferences of the visitor.</p>
+
+<h2>Determination of the visitor language</h2>
+
+<p>In order of priority, the language is determined using the following
+sequence:</p>
+
+<ol>
+<li>The <code>pluf_language</code> session key.</li>
+<li>The <code>pluf_language</code> cookie (you can change the name with the <code>lang_cookie</code> configuration key).</li>
+<li>The user agent <code>Accept-Language</code> request header.</li>
+<li>The first language in the configuration file.</li>
+</ol>
+
+<p>In the particular case of a connected user, if the <code>pluf_language</code>
+session key is not yet populated, the <code>$user-&gt;language</code> property of
+the user will be used to first set the <code>pluf_language</code> session key.</p>
+
+<h2>In the templates</h2>
+
+<p>You only need to use one function or one block to translate your
+templates. The function is used when you need only to translate one
+line without substitution of variables and the block is used when you
+need either or both of substitution variables and plural forms.</p>
+
+<p>Consider the following template fragment which is not translated:</p>
+
+<pre><code>&lt;h1&gt;Pluf internationalization&lt;/h1&gt;
+&lt;p&gt;To translate your code, use one of 
+   the {$methods.count()} method(s):&lt;/p&gt;
+&lt;ul&gt;
+{foreach $methods as $method}
+   &lt;li&gt;Name: {$method.name}, 
+       Description: {$method.description}.&lt;/li&gt;
+{/foreach}
+&lt;/ul&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>Now the version ready for translation:</p>
+
+<pre><code>&lt;h1&gt;{trans "Pluf internationalization"}&lt;/h1&gt;
+{assign $n_methods = $methods.count()}
+&lt;p&gt;{blocktrans $n_methods}To translate your code, use 
+   the following method:{plural}To translate your code, use 
+   one of the {$n_methods} methods:{/blocktrans}&lt;/p&gt;
+&lt;ul&gt;
+{foreach $methods as $method}
+   &lt;li&gt;{blocktrans}Name: {$method.name}, 
+   Description: {$method.description}.{/blocktrans}&lt;/li&gt;
+{/foreach}
+&lt;/ul&gt;
+&lt;/html&gt;
+</code></pre>
+
+<h3>The <strong>trans</strong> function</h3>
+
+<p>The simple translation function: <code>trans</code> is used the following way:</p>
+
+<pre><code>{trans "My string to translate"}
+</code></pre>
+
+<p>or</p>
+
+<pre><code>{trans 'My string to translate'}
+</code></pre>
+
+<p>You cannot use variables within the string. This is perfect for small
+strings in your templates.</p>
+
+<h3>The <strong>blocktrans</strong> block</h3>
+
+<p>The block has <strong>two</strong> different ways to be called, one for the plural
+form and one <em>normal</em> form.</p>
+
+<h4>The normal form</h4>
+
+<p>A simple example without variable subsitution:</p>
+
+<pre><code>{blocktrans}This is a long text 
+that can be over multiple lines and that
+can be translated later.{/blocktrans}
+</code></pre>
+
+<p>You can also substitute variables within the string, but you cannot
+call another function or block.</p>
+
+<pre><code>{blocktrans}I like {$fruit}, {$vegetable} 
+and {$place}.{/blocktrans}
+</code></pre>
+
+<p><code>{$fruit}</code>, <code>{$vegetable}</code> and <code>{$place}</code> will be replaced with their
+corresponding value as in the rest of your template.</p>
+
+<h4>The plural form</h4>
+
+<p>Example of use without substitution of variables:</p>
+
+<pre><code>{blocktrans $counter}This is the singular 
+form.{plural}This is the plural form.
+{/blocktrans}
+</code></pre>
+
+<p>Depending of the value of <code>$counter</code>, the first and unique parameter
+given to the block, the singular or the plural form will be selected.</p>
+
+<p>In exactly the same way as the normal form, you can substitute
+variables like that:</p>
+
+<pre><code>{blocktrans $counter}I have one {$pcbrand}.
+{plural}I have {$counter} computers from several brands 
+including {$pcbrand}.
+{/blocktrans}
+</code></pre>
+
+<p>As you can see, this is pretty flexible.</p>
+
+<h2>In your PHP code</h2>
+
+<p>In your code, you can use two function to translation your code:</p>
+
+<ul>
+<li><code>__</code>: For example <code>__('My simple string')</code></li>
+<li><code>_n</code>: For example <code>_n('Singular form.', 'Plural form.', $counter)</code></li>
+</ul>
+
+<p>The first function is to handle simple normal cases and the second one
+to handle plural cases. If you want to perform variable substitution,
+you can use the <code>sprintf</code> function like that:</p>
+
+<pre><code>$place = 'Berlin';
+echo sprintf(__('I like %s.'), $place);
+echo sprintf(__('I like %s.'), 'Berlin');
+</code></pre>
+
+<p>See the <a href="http://www.php.net/sprintf">documentation of sprintf</a>.</p>
+
+<p>If you have a key indexed array of values you want to substitute in a
+string, you can use the special <code>Pluf_Translation::sprintf</code> function.</p>
+
+<p>For example:</p>
+
+<pre><code>$values = array('place' =&gt; 'Berlin',
+                'fruit' =&gt; 'apple',
+                'computer' =&gt; 'IBM');
+echo Pluf_Translation::sprintf(__('I have one %%fruit%%, one %%computer%% in %%place%%.'), $values);
+</code></pre>
+
+<p>This will display:</p>
+
+<pre><code>I have one apple, one IBM in Berlin.
+</code></pre>
+
+<p>Or if you have translated the string <code>'I have one %%fruit%%, one %%computer%% in %%place%%.'</code> in French:</p>
+
+<pre><code>J'ai une apple, un IBM à Berlin.
+</code></pre>
+
+<h2>Updating/Creating language files</h2>
+
+<p>The translations are store in <a href="http://www.gnu.org/software/gettext/">GNU Gettext PO files</a>. This storage format
+allows to take benefit of all the set of utilities to parse the code
+to extract the strings and to perform the translations.</p>
+
+<p>The <code>.po</code> files are stored as <strong>YourApp/locale/LANG/yourapp.po</strong>. For
+example, the French translation of Pluf is in
+<strong>Pluf/locale/fr/pluf.po</strong>. The particular form of a language, for
+example the British English is stored in the <strong>en_GB</strong> folder.</p>
+
+<p>The search order of the .po file is so that it will first try to find
+the corresponding territory version, for example <strong>fr_QC</strong> and if it
+is not available, it will default to use the main version <strong>fr</strong>. If
+none are available, it will not load any language file.</p>
+
+<h3>Extract the strings from the templates</h3>
+
+<p>The templates are not using a standard <em>gettext</em> format, so the first
+step is to convert your templates into a version ready to be consumed
+by the gettext extract tool <code>xgettext</code>.</p>
+
+<p>Go in your application folder, for example:</p>
+
+<pre><code>$ cd ~/myprojects/web/MyApp
+</code></pre>
+
+<p>Then run the following command:</p>
+
+<pre><code>$ php /path/to/pluf/extracttemplates.php ./conf/myapp.php ./gettexttemplates
+</code></pre>
+
+<p>You will see that a list of files is extracted. Looking into the newly
+created <code>gettexttemplates</code> folder, you will see all your templates
+with a <code>.php</code> extension and inside them, only the strings from the
+<code>trans</code> function and the <code>blocktrans</code> blocks.</p>
+
+<p>These files can now be parsed by <code>xgettext</code>.</p>
+
+<h3>Create the main .pot file</h3>
+
+<p>The <code>.pot</code> file is the template <code>.po</code> file used as a basis for the
+other languages. This is basically a <code>.po</code> file without
+translations. This is the only file you should create automatically
+with <code>xgettext</code>.</p>
+
+<p>Create first a <code>MyApp/locale</code> folder. Your template file will be
+<code>MyApp/locale/myapp.pot</code>.</p>
+
+<p>Go in your application folder:</p>
+
+<pre><code>$ cd ~/myprojects/web/MyApp
+</code></pre>
+
+<p>And run the following commands, each command must be on a single line,
+the backslash (&#92;) is here only for the presentation at the exception
+of the one just before the (;) which is needed:</p>
+
+<pre><code>$ xgettext -o myapp.pot -p ./MyApp/locale --force-po --from-code=UTF-8 \
+      --keyword --keyword=__ --keyword=_n:1,2 -L PHP *.php
+$ find ./ -iname "*.php" -exec xgettext  -o myapp.pot -p ./MyApp/locale \
+      --from-code=UTF-8 -j --keyword --keyword=__ --keyword=_n:1,2 \
+      -L PHP {} \;
+</code></pre>
+
+<p>You can learn more about <strong>xgettext</strong> by typing <code>$ man xgettext</code> on
+your system.</p>
+
+<h3>Create a new translation for a language</h3>
+
+<p>Now consider you want to make the base French translation. Create a
+folder <code>MyApp/locale/fr</code> and open <a href="http://www.poedit.net/">Poedit</a>.</p>
+
+<p>In the file menu, select <em>New catalog from POT file</em> and select the
+<code>MyApp/locale/myapp.pot</code> file.</p>
+
+<p>Then go in the <em>Catalog > Settings...</em> menu and in the <em>Project Info</em>
+tab, input the followings:</p>
+
+<ul>
+<li>Project name and version: <strong>MyApp 1.0</strong></li>
+<li>Team: <strong>French</strong></li>
+<li>Language: <strong>French</strong></li>
+<li>Country: <strong>France</strong></li>
+<li>Charset: <strong>UTF-8</strong></li>
+<li>Source code charset: <strong>UTF-8</strong></li>
+<li>Plural forms: <strong>nplurals=2; plural=n>1;</strong></li>
+</ul>
+
+<p>Then in the <em>Paths</em> tab, input <code>../../</code> and click on Ok and in the
+file menu save the file as <code>/MyApp/locale/fr/myapp.po</code></p>
+
+<p>If you wonder what are the plural forms, <a href="http://www.gnu.org/software/gettext/manual/html_node/Plural-forms.html">the plural forms manual</a> is available.</p>
+
+<h3>Update a translation</h3>
+
+<p>Now, if you update your code, you need to have the new strings in your
+<code>.po</code> file. What you have to do is first, update or recreate the
+<code>.pot</code> file by first extracting the strings from the templates and
+then running the <em>xgettext</em> utility.</p>
+
+<p>Afterwards, open you <code>.po</code> file in <strong>Poedit</strong> and click on <em>Catalog >
+Update from POT file...</em>. You will have some info, if everything looks
+in order, for example that you do not have suddenly a lot less
+strings, click on Ok. <strong>It is always good to make a backup of your .po file before updating it from a .pot file</strong>.</p>
+
+<p>Now you can translate the new strings and update the old ones.</p>
+
+  </div></div>
+  <div class="grid_3">
+    
+    <div id="docmenu">
+      <h4>Other Documentation</h4>
+      <p>
+	&raquo;&nbsp;<a href="project.html">Project structure</a><br />
+	&raquo;&nbsp;<a href="coding-conventions.html">Coding standards</a><br />
+	&raquo;&nbsp;<a href="configuration.html">configuration</a><br />
+	&raquo;&nbsp;<a href="lifecycle.html">lifecycle</a><br />
+	&raquo;&nbsp;<a href="principles.html">principles</a><br />
+	&raquo;&nbsp;<a href="session.html">session</a><br />
+	&raquo;&nbsp;<a href="storage.html">storage</a><br />
+
+	&raquo;&nbsp;<a href="testing.html">testing</a><br />
+
+	&raquo;&nbsp;<a href="tasks.html">Background Tasks</a><br />
+	&raquo;&nbsp;<a href="performance.html">Performance benchmark</a><br />
+      </p>
+    </div>
+    
+  </div>
+</div>
+
+<div id="footer">
+  <div class="container_12">
+    <div class="grid_9 suffix_3">
+      <p>©&nbsp;2014 <a href="../about.html">Céondo Ltd</a> and contributors.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

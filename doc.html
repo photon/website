@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Documentation - Photon, High Performance PHP &amp; Mongrel2 Framework</title>
+<meta charset="utf-8">
+<meta name="description" content="A high performance PHP framework using Mongrel2 and ZeroMQ.">
+<link href="http://fonts.googleapis.com/css?family=Josefin+Sans:bold" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="media/css/merged.css" />
+
+
+</head>
+<body>
+
+<div id="header">
+<div class="container_12">
+  <div class="grid_12" id="titlepage">
+    <h1>Photon Documentation</h1>
+
+  </div>
+</div>
+</div>
+
+
+<div class="container_12" id="main">
+  <div class="grid_10"><div class="wrapper">
+<div class="tabs">
+<ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="download.html">Download</a></li>
+<li class="active"><a href="doc.html">Documentation</a></li>
+<li><a href="community.html">Community</a></li>
+<li><a href="about.html">About</a></li>
+</ul>
+</div>
+
+
+
+
+<h2>Documentation Topics and Tutorials</h2>
+
+
+<p>
+The documentation is a work in progress and at the moment it may not
+fully reflect the code base as the code is moving really fast.
+</p>
+
+<ul>
+<li>First, learn what is a <a href="doc/project.html">Photon project and its structure</a>.</li>
+<li>Check how to <a href="doc/configuration.html">configure your project</a>.</li>
+<li>Understand the <a href="doc/lifecycle.html">life cycle of a request</a>.</li>
+<li>The <a href="doc/principles.html">Photon principles</a> are the base against which new features are evaluated.</li>
+<li>The <a href="doc/urls.html">URL map</a>, to map a path to a view.</li>
+<li>The <a href="doc/commandline.html">command line utility</a> to start/stop Photon or create new projects.</li>
+<li>The <a href="doc/template.html">high performance templating engine</a> to write HTML the easy way.</li>
+<li><a href="doc/session.html">Session handling</a>.</li>
+<li><a href="doc/storage.html">Model storage</a>.</li>
+<li><a href="doc/testing.html">Testing</a> of your application.</li>
+<li><a href="doc/tasks.html">Background tasks</a> to run asynchronous work or special services.</li>
+</ul>
+
+<h2>On the To-Do-List</h2>
+
+<ul>
+<li>Add events and hooks.</li>
+<li>Add MongoDB and in memory session handlers.</li>
+<li>Add ACL system with clients/users and groups with MongoDB and text based ACL storages.</li>
+</ul>
+
+<p>
+The goal is as always, to keep the core of Photon small and easy to
+understand. The specialized components will not be integrated within
+Photon but delivered as <em>Particles</em> of a Photon
+project. <em>www.particles-project.com</em> will be the host of a
+large collection of high quality components.
+</p>
+
+<p>
+Each time a storage is needed to handle a specific task, for example
+session, acl storage, etc. At least two reference backends
+implementation will be provided. This is to have a clean API and serve
+as an example for you to create your own storage layers. 
+</p>
+
+</div>
+  </div>
+  <div class="grid_2">
+
+  </div>
+</div>
+
+<div id="footer">
+  <div class="container_12">
+    <div class="grid_10 suffix_2">
+      <p>©&nbsp;2014 <a href="about.html">Céondo Ltd</a> and contributors.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> - Documentation - Photon, High Performance PHP &amp; Mongrel2 Framework</title>
+<meta charset="utf-8">
+<meta name="description" content="A high performance PHP5 framework using Mongrel2 and ZeroMQ.">
+<link href="http://fonts.googleapis.com/css?family=Josefin+Sans:bold" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="../media/css/merged.css" />
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-408943-17']);
+  _gaq.push(['_setDomainName', '.photon-project.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="container_12">
+  <div class="grid_9"><div class="wrapper">
+      <div class="tabs">
+<ul>
+<li><a href="../index.html">Home</a></li>
+<li><a href="../download.html">Download</a></li>
+<li class="active"><a href="../doc.html">Documentation</a></li>
+<li><a href="../community.html">Community</a></li>
+<li><a href="../about.html">About</a></li>
+</ul>
+</div>
+
+      
+      <p>By Loïc d'Anterroches, <a href="http://xhtml.net">xhtml.net</a>, 18th of February, 2011</p>
+
+<h1>Project File Structure</h1>
+
+<p>Organization of a Photon project. This includes the directory and file structure.</p>
+
+<h2>Everything Is Done By Convention</h2>
+
+<p>Conventions rule the directory structure. This means that in practice
+you can use any directory or file structure you want, but your code
+will be easier to maintain if you follow the conventions. The use of
+conventions over hard rules enforced at the code level means less code
+to maintain and most of the time better performance.</p>
+
+<h2>Structure of a Website Implemented With Photon</h2>
+
+<p>A website or a web application is a collection of components or <code>apps</code>
+glued together in an URL space. For example, your website could be
+composed of a series of small applications:</p>
+
+<ul>
+<li>a weblog;</li>
+<li>a series of reference articles;</li>
+<li>a home page listing the latest posts and articles;</li>
+<li>a micro blogging feed;</li>
+<li>a bookmark manager.</li>
+</ul>
+
+<p>Of course, you may write each application by yourself or reuse
+applications from third parties, but the key is <strong>an application is
+small</strong>. An application just does one thing and does it well. You can have
+200 applications in your website it will not affect performance at
+all.</p>
+
+<p><strong>Photon</strong> allows you to easily run background tasks. For example, a
+background task could be a small chat server which will notify each
+client when a message arrives or take care of sending an email to
+all your friends.</p>
+
+<p><strong>So, each web application is project composed of many apps which may provide tasks</strong>.</p>
+
+<h2>Base Structure of a Project</h2>
+
+<pre><code>myproject/config.php - Production configuration file
+myproject/config.test.php - Testing configuration file
+myproject/urls.php - URL map
+myproject/templates - Custom templates
+myproject/www - Assets like images, Javascripts, CSS
+myproject/apps - Applications
+myproject/apps/helloworld - Hello World application
+</code></pre>
+
+<h2>Base Structure of an App</h2>
+
+<pre><code>helloworld/urls.php - URL map
+helloworld/views.php - Views
+helloworld/tests.php - Unit tests
+helloworld/templates/helloworld - Application templates
+helloworld/www/media/helloworld - Assets like images, Javascripts, CSS
+helloworld/data - Optional data
+helloworld/models.php - Optional models
+helloworld/task.php - Optional tasks
+</code></pre>
+
+<p>Only the <code>tests.php</code>, <code>urls.php</code> and the <code>views.php</code> are in practice
+needed. That is, you want to display something <em>the views</em> at a given
+point in the URL space of your project <em>the URL map</em>.</p>
+
+<p>If your application is only providing some tasks, you may have just
+two files, <code>tests.php</code> and <code>task.php</code>.</p>
+
+<p>Yes, a task is very simple, it is basically just a small piece of code
+launched and monitored in the background by <strong>Photon</strong>. It listens on
+a given <a href="http://www.zeromq.org">ZeroMQ</a> socket for some work and send the results either
+directly as a synchronous task or not as an asynchronous task.</p>
+
+  </div></div>
+  <div class="grid_3">
+    
+    <div id="docmenu">
+      <h4>Other Documentation</h4>
+      <p>
+	&raquo;&nbsp;<a href="project.html">Project structure</a><br />
+	&raquo;&nbsp;<a href="coding-conventions.html">Coding standards</a><br />
+	&raquo;&nbsp;<a href="configuration.html">configuration</a><br />
+	&raquo;&nbsp;<a href="lifecycle.html">lifecycle</a><br />
+	&raquo;&nbsp;<a href="principles.html">principles</a><br />
+	&raquo;&nbsp;<a href="session.html">session</a><br />
+	&raquo;&nbsp;<a href="storage.html">storage</a><br />
+
+	&raquo;&nbsp;<a href="testing.html">testing</a><br />
+
+	&raquo;&nbsp;<a href="tasks.html">Background Tasks</a><br />
+	&raquo;&nbsp;<a href="performance.html">Performance benchmark</a><br />
+      </p>
+    </div>
+    
+  </div>
+</div>
+
+<div id="footer">
+  <div class="container_12">
+    <div class="grid_9 suffix_3">
+      <p>©&nbsp;2014 <a href="../about.html">Céondo Ltd</a> and contributors.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

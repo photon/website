@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> - Documentation - Photon, High Performance PHP &amp; Mongrel2 Framework</title>
+<meta charset="utf-8">
+<meta name="description" content="A high performance PHP5 framework using Mongrel2 and ZeroMQ.">
+<link href="http://fonts.googleapis.com/css?family=Josefin+Sans:bold" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="../media/css/merged.css" />
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-408943-17']);
+  _gaq.push(['_setDomainName', '.photon-project.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="container_12">
+  <div class="grid_9"><div class="wrapper">
+      <div class="tabs">
+<ul>
+<li><a href="../index.html">Home</a></li>
+<li><a href="../download.html">Download</a></li>
+<li class="active"><a href="../doc.html">Documentation</a></li>
+<li><a href="../community.html">Community</a></li>
+<li><a href="../about.html">About</a></li>
+</ul>
+</div>
+
+      
+      <p>By Loïc d'Anterroches, <a href="http://xhtml.net">xhtml.net</a>, 9th of March, 2011</p>
+
+<h1>Photon Template Engine</h1>
+
+<p>Photon has a high performance template engine with
+autoescaping, inheritance and more.</p>
+
+<p>The <strong>Photon</strong> template engine is very thin and very efficient.
+It compiles your templates to pure PHP code. Any text format
+can easily be generated with the engine. Internationalisation is
+supported out of the box.</p>
+
+<h2>Template Usage</h2>
+
+<p>The usage is very simple and inspired by the Django way of doing
+things:</p>
+
+<pre><code>use photon\config\Container as Conf;
+use photon\template;
+
+$renderer = new template\Renderer('myapplication/home.html', 
+                                  Conf::f('template_folders'));
+$context = new template\Context(array('user' =&gt; 'Photon User',
+                                      'foo' =&gt; 'bar'));
+$content = $renderer-&gt;render($context);
+</code></pre>
+
+<p>The usage is very simple:</p>
+
+<ol>
+<li>You create a new template renderer with a given template.</li>
+<li>You generate a context which will be used to substitute the variables in the template. </li>
+<li>You render the template with the given context.</li>
+</ol>
+
+<p>The <code>\photon\shortcuts</code> module provide some shortcuts to perform the
+common template operations, like rendering a template and using the
+content for a response in a single function call.</p>
+
+<h2>Base Template Syntax</h2>
+
+<p>The syntax in a template is heavily inspired by the PHP language
+itself. In fact, the <a href="http://www.php.net/tokenizer">PHP tokenizer</a> itself is used to
+parse the template. All the special elements or tags in a template
+start with <code>{</code> and end with <code>}</code>.</p>
+
+<p>The special elements are used to display variables, perform flow
+control, localize your templates and more.</p>
+
+<h2>Internationalisation</h2>
+
+<p>If you are writing an application that is then used by many people
+from different countries, you will translate the pages in different
+languages. This means that in the code you will do things like:</p>
+
+<pre><code>&lt;?php echo _('Hello world'); ?&gt;
+</code></pre>
+
+<p>With the templating engine you can do:</p>
+
+<pre><code>{trans 'Hello world'}
+</code></pre>
+
+<p>The power is coming when you need to translate and do substitution at
+the same time, for example, with the templating engine you can simply
+do:</p>
+
+<pre><code>{blocktrans}Hello {$user}, you are welcome!{/blocktrans}
+</code></pre>
+
+<p>or a plural form:</p>
+
+<pre><code>{blocktrans $counter}I have one computer.{plural}I have 
+{$counter} computers.{/blocktrans}
+</code></pre>
+
+<p>You can read the <a href="internationalisation.html">internationalisation documentation</a> 
+to learn more on the subject.</p>
+
+<h2>Simple Template Example</h2>
+
+<p>Templates are simple text files. You can use them to generate any
+text-based format like XHTML, XML, CSV, etc.</p>
+
+<p>Here is an example of a template:</p>
+
+<pre><code> {extends 'base.html'}
+ {block body}
+ &lt;h2&gt;{$list.name|upper}&lt;/h2&gt;
+ {if $items}
+ &lt;ol&gt;
+ {foreach $items as $item}
+ &lt;li&gt;
+ &lt;a href="{url 'todo_viewitem', $item.id}"&gt;{$item.item}&lt;/a&gt;
+ &lt;/li&gt;
+ {/foreach}
+ &lt;/ol&gt;
+ {/if}
+ &lt;p&gt;&lt;a href="{url 'todo_additem', $list.id}"&gt;Create a new 
+ item&lt;/a&gt; | 
+ &lt;a href="{url 'todo_updatelist', $list.id}"&gt;Update 
+ the list&lt;/a&gt;&lt;/p&gt;
+ {/block}
+</code></pre>
+
+<p>What you can see the normal HTML tags together with the curly brackets
+<code>{}</code> delimiting the <strong>tags</strong> and <strong>variables</strong>. Exactly the same way
+as in PHP, variables start with the dollar sign <code>$</code>.</p>
+
+<h2>Template inheritance</h2>
+
+<p>The template inheritance is directly inspired by the 
+<a href="http://www.djangoproject.com/documentation/templates/#template-inheritance">Django template inheritance</a>,
+because when you start to use it, you want all your templating systems
+to have this feature. Here is an example of a base template <code>base.html</code>:</p>
+
+<pre><code>&lt;!DOCTYPE&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8" /&gt;
+&lt;title&gt;Todo Test Application : {$page_title}&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;{$page_title}&lt;/h1&gt;
+{block body}{/block}
+&lt;p&gt;&lt;a href="{url 'todo_home'}"&gt;Home&lt;/a&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>You can see the definition <code>{block body}{/block}</code>, this means that here we
+have a block with the name <code>body</code> defined. Now, if you take the first
+template example, it was in the form:</p>
+
+<pre><code> {extends 'base.html'}
+ {block body}
+ Some content here...
+ {/block}
+</code></pre>
+
+<p>What it means is that when rendering this <em>child</em> template, it will
+first load the <code>base.html</code> template and detect that the <code>body</code> block
+is available and also overwritten in the <em>child</em> template. The result
+is that the final content of the <code>body</code> block will be the one of the
+<em>child</em> template.</p>
+
+<p>If you define a block in the parent template and do not define it in
+the child, the content of the parent template is used. You can have
+multiple inheritance levels.</p>
+
+<h2>Variables</h2>
+
+<p>A variable is assigned to the template in your PHP code and is then
+available in the template in the form:</p>
+
+<pre><code>{$myvariable}
+</code></pre>
+
+<p>When the template engine find <code>{$myvariable}</code> it evaluates the content
+of the variable and replaces it with the result. For example, you put
+"Hello World!" in <code>myvariable</code>, the following template code:</p>
+
+<pre><code>&lt;p&gt;{$myvariable}&lt;/p&gt;
+</code></pre>
+
+<p>will render as:</p>
+
+<pre><code>&lt;p&gt;Hello World!&lt;/p&gt;
+</code></pre>
+
+<p>If you want to access the attributes of a variable representing an
+object, you can use a dot (<code>.</code>), for example:</p>
+
+<pre><code>{$user.last_name}
+</code></pre>
+
+<h2>Filters</h2>
+
+<p>Variables can be modified, for example, in the template example you
+can find the fragment:</p>
+
+<pre><code>&lt;h2&gt;{$list.name|upper}&lt;/h2&gt;
+</code></pre>
+
+<p>This means, take the <code>name</code> attribute of the <code>list</code> variable, convert
+it to uppercase and display it.</p>
+
+<p>You can chain the filters to apply multiple filters on one
+variable. For example you could do:</p>
+
+<pre><code>&lt;p&gt;{$mytexte|upper|nl2br}&lt;/p&gt;
+</code></pre>
+
+<p>to convert your text in uppercase and then convert the new line
+character to HTML line break.</p>
+
+<p>Some filter take parameters, in that case you write the parameters
+after the name of the filter:</p>
+
+<pre><code>&lt;p&gt;{$modification_date|date:"Y-m-d"}&lt;/p&gt;
+</code></pre>
+
+<h2>Tags</h2>
+
+<p>Tags do not start with the dollar (<code>$</code>) sign, but directly with the name
+of the tag. In the above example, you can find the following tags:
+<code>extends</code>, <code>block</code>, <code>if</code>, <code>foreach</code>, <code>url</code>. Some of the tags have a
+corresponding closing tag <code>/if</code>, <code>/block</code>, but some other don't.</p>
+
+<p>Tags are more complex than variables as they can insert content in the
+template, change the rendering flow or loop on list of variables. See
+the reference below for more details.</p>
+
+<h3><code>if</code>, <code>else</code> and <code>elseif</code></h3>
+
+<p>These are simple control structure tags to display conditional
+information. For example you can have:</p>
+
+<pre><code>{if $title}
+The title is: {$title}.
+{else}
+We do not have a title.
+{/if}
+</code></pre>
+
+<p>or simply:</p>
+
+<pre><code>{if !empty($title)}The title is: {$title}.{/if}
+</code></pre>
+
+<p><code>if</code> and <code>elseif</code> accept a condition which is evaluated as PHP code,
+you can use all the builtin PHP functions in the conditions. The
+templating engine will not try to prevent you to do crazy things. The
+goal is to simplify your life, not to put you in a sandbox.</p>
+
+<h3><code>foreach</code></h3>
+
+<p>Foreach is used to iterate through an array or a class implementing
+the <code>[Iterator](http://www.php.net/spl)</code> interface. You can use it the
+same way as the <code>foreach</code> PHP control block.</p>
+
+<pre><code>{foreach $array as $key =&gt; $value}
+{$key}: {$value}&lt;br /&gt;
+{/foreach}
+</code></pre>
+
+<p>or:</p>
+
+<pre><code>{foreach $array as $value}
+{$value}&lt;br /&gt;
+{/foreach}
+</code></pre>
+
+<h3><code>while</code></h3>
+
+<p>The <code>while</code> loop is executed as long as the condition is true.</p>
+
+<pre><code>{while $skyisblue}The sky is blue.{/while}
+</code></pre>
+
+<p>You should structure your code not to create infinite loops!</p>
+
+<h3><code>assign</code></h3>
+
+<p>Assign a value to a variable. For example:</p>
+
+<pre><code>{assign $skyisblue = false}
+</code></pre>
+
+<p>You can then use the <code>$skyisblue</code> variable later in your template. Any
+kind of function call can be made in the assignement. For example:</p>
+
+<pre><code>{assign $title = mb_strtoupper($title)}
+</code></pre>
+
+<p>Now, <code>$title</code> is in upper case.</p>
+
+<p>If you want to concatenate several strings into one big, you can use
+the <code>~</code> (tilde) character:</p>
+
+<pre><code>{assign $title = $title1~' and '~$title2}
+</code></pre>
+
+<p>This is the equivalent of the following PHP code:</p>
+
+<pre><code> $title = $title1.' and '.$title2;
+</code></pre>
+
+<h3><code>literal</code></h3>
+
+<p>The literal block is used to display verbatim content. That is, the
+code will be displayed without interpretation:</p>
+
+<pre><code>The assign tag is used that way:
+
+{literal}
+{assign $title = mb_strtoupper($title)}
+{/literal}
+</code></pre>
+
+<p>This is useful when inserting JavaScript in your template.</p>
+
+<h3><code>block</code> and <code>superblock</code></h3>
+
+<p>See the template inheritance section later in this document.</p>
+
+<h3><code>trans</code>, <code>plural</code> and <code>blocktrans</code></h3>
+
+<p>See the <a href="internationalisation.html">internationalisation documentation</a> 
+to see how to use this tags
+to translate your application in multiple languages.</p>
+
+<h3><code>include</code></h3>
+
+<p>Include another template in the current template. If you are often
+using a piece of template and do not want to write it again and again
+and if you cannot use the template inheritance, you can include a
+template within another.</p>
+
+<pre><code>{include 'path/to/your/template.html'}
+</code></pre>
+
+<p>The path is written the same way as what you would write to use a
+template from your PHP code. That is, you do not provide the full path
+to the file and the file will be searched through the folders defined
+in the <code>'template_folders'</code> configuration variable.</p>
+
+<p><strong>Important Restrictions</strong></p>
+
+<p>The path is a fixed path. You cannot write:</p>
+
+<pre><code>{include $variable~"/path/to/template.html"}
+</code></pre>
+
+<p>The include template cannot contain inheritance <code>block</code>.</p>
+
+<h2>Comments</h2>
+
+<p>A comment is a piece of information that will not be displayed in the
+final rendering.</p>
+
+<pre><code>{* This is a comment,
+   it can be over multiple lines and can contain
+blocks {$variable} etc... *}
+</code></pre>
+
+<p>Basically, before rendering the template, the text between <code>{*</code> and
+<code>*}</code> is removed and then the rendering starts. This allows the
+template creators to write down some notes that will not be seen in
+the final result. This is great to comment your template.</p>
+
+<h2>Security Against XSS</h2>
+
+<p>All the variables are automatically escaped in the output. If you want
+to display the content of a variable without escaping, you need to
+mark it as safe from within the code (the best) or from within the
+template (not so good, you should not worry about those details in the
+templates).</p>
+
+<p>Mark a string as safe in the code:</p>
+
+<pre><code>$safe_string = \photon\template\SafeString::markSafe('&lt;b&gt;String with HTML&lt;/b&gt;');
+</code></pre>
+
+<p>Mark a safe string in the template with the <code>safe</code> output filter:</p>
+
+<pre><code>{$my_string|safe}
+</code></pre>
+
+<h2>Builtin Variable Filters</h2>
+
+<h3><code>upper</code></h3>
+
+<p>Convert a string to uppercase using the PHP <a href="http://www.php.net/strtoupper">strtoupper</a> function.</p>
+
+<h3><code>lower</code></h3>
+
+<p>Convert a string to lowercase using the PHP <a href="http://www.php.net/strtolower">strtolower</a> function.</p>
+
+<h3><code>count</code></h3>
+
+<p>Count the number of elements in an array using the PHP <a href="http://www.php.net/count">count</a> function.</p>
+
+<h3><code>md5</code></h3>
+
+<p>Returns the md5 hash of a string using the PHP <a href="http://www.php.net/md5">md5</a> function.</p>
+
+<h3><code>escape</code></h3>
+
+<h3><code>strip_tags</code></h3>
+
+<h3><code>escurl</code></h3>
+
+<h3><code>capitalize</code></h3>
+
+<h3><code>debug</code></h3>
+
+<h3><code>dump</code></h3>
+
+<h3><code>nl2br</code></h3>
+
+<h3><code>trim</code></h3>
+
+<h3><code>safe</code></h3>
+
+<p>Mark a string as safe.</p>
+
+  </div></div>
+  <div class="grid_3">
+    
+    <div id="docmenu">
+      <h4>Other Documentation</h4>
+      <p>
+	&raquo;&nbsp;<a href="project.html">Project structure</a><br />
+	&raquo;&nbsp;<a href="coding-conventions.html">Coding standards</a><br />
+	&raquo;&nbsp;<a href="configuration.html">configuration</a><br />
+	&raquo;&nbsp;<a href="lifecycle.html">lifecycle</a><br />
+	&raquo;&nbsp;<a href="principles.html">principles</a><br />
+	&raquo;&nbsp;<a href="session.html">session</a><br />
+	&raquo;&nbsp;<a href="storage.html">storage</a><br />
+
+	&raquo;&nbsp;<a href="testing.html">testing</a><br />
+
+	&raquo;&nbsp;<a href="tasks.html">Background Tasks</a><br />
+	&raquo;&nbsp;<a href="performance.html">Performance benchmark</a><br />
+      </p>
+    </div>
+    
+  </div>
+</div>
+
+<div id="footer">
+  <div class="container_12">
+    <div class="grid_9 suffix_3">
+      <p>©&nbsp;2014 <a href="../about.html">Céondo Ltd</a> and contributors.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

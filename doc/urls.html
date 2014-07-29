@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> - Documentation - Photon, High Performance PHP &amp; Mongrel2 Framework</title>
+<meta charset="utf-8">
+<meta name="description" content="A high performance PHP5 framework using Mongrel2 and ZeroMQ.">
+<link href="http://fonts.googleapis.com/css?family=Josefin+Sans:bold" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="../media/css/merged.css" />
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-408943-17']);
+  _gaq.push(['_setDomainName', '.photon-project.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="container_12">
+  <div class="grid_9"><div class="wrapper">
+      <div class="tabs">
+<ul>
+<li><a href="../index.html">Home</a></li>
+<li><a href="../download.html">Download</a></li>
+<li class="active"><a href="../doc.html">Documentation</a></li>
+<li><a href="../community.html">Community</a></li>
+<li><a href="../about.html">About</a></li>
+</ul>
+</div>
+
+      
+      <p>By Loïc d'Anterroches, <a href="http://xhtml.net">xhtml.net</a>, 8th of March, 2011</p>
+
+<h1>Photon URL Map Definition</h1>
+
+<p>The URL map is doing the correspondance between the URL of your
+website and the views in your application.</p>
+
+<p>When a request comes from Mongrel2 to Photon, Mongrel2 has already
+done some work for us by extracting the path of the request and
+parsing the headers. From these details, Photon forward the request to
+the right view — the piece of code doing the work to build the answer
+to the client. <strong>The selection of the view based on the parsed request by Mongrel2 is defined in the URL map</strong>.</p>
+
+<p>The URL map is just a set of regular expressions run against the <a href="http://labs.apache.org/webarch/uri/rfc/rfc3986.html#components" title="Uniform Resource Identifier (URI): Generic Syntax">path</a>.</p>
+
+<pre><code>  foo://example.com:8042/over/there?name=ferret#nose
+  \_/   \______________/\_________/ \_________/ \__/
+   |           |            |            |        |
+scheme     authority       path        query   fragment
+</code></pre>
+
+<p>Note that in the case of an HTTP request, the query, the authority and
+the scheme are provided either implicitely or explicitely in the
+parsed headers. The fragment is never available to Mongrel2 and
+Photon.</p>
+
+<h2>Simple URL Map Format</h2>
+
+<p>The simple format is a flat array of regular expressions matching
+against the path. The expressions are run in order and the first match
+win. For example, the URL Map of a simple <em>Hello World</em> application could be:</p>
+
+<pre><code>array(
+      array('regex' =&gt; '#^/$#',
+            'view' =&gt; array('\helloworld\views\Views', 'index'),
+            'name' =&gt; 'helloworld_index',
+           ),
+      array('regex' =&gt; '#^/(.*)$#',
+            'view' =&gt; array('\helloworld\views\Views', 'you'),
+            'name' =&gt; 'helloworld_you',
+           ),
+     );
+</code></pre>
+
+<p>Here you have 2 defined views, the <code>helloworld_index</code> and the
+<code>helloworld_you</code> views. Each view is simply an associative array with
+the following mandatory keys:</p>
+
+<ul>
+<li><code>regex</code>: The regular expression to match against the path. By
+convention we use <code>#</code> as delimiting character instead of <code>/</code>. The
+regex is given directly to <a href="http://php.net/preg_match">preg_match</a></li>
+<li><code>view</code>: A <a href="http://php.net/manual/en/language.pseudo-types.php#language.types.callback">PHP callable</a>, usually as you group your views
+in classes, this will be an array with the class and the method but
+to return just a simple text line (for a robots.txt file) you could
+directly use a closure.</li>
+<li><code>name</code>: The name of the view, by convention a string following the
+format <code>yourapp_yourview</code>.</li>
+</ul>
+
+<h2>View Parameters</h2>
+
+<p>Sometimes, you have a generic view which can be fined tuned with a
+parameter. For example, the <code>photon\views\Template::simple</code> view is
+defined as:</p>
+
+<pre><code>class Template
+{
+    public function simple($request, $match, $template)
+    {
+        return shortcuts\Template::RenderToResponse($template, array(), $request);
+    }
+}
+</code></pre>
+
+<p>You can see the <code>$template</code> parameter. This can be directly defined in
+your URL map, for example:</p>
+
+<pre><code>array(
+      array('regex' =&gt; '#^/$#',
+            'view' =&gt; array('\photon\views\Template', 'simple'),
+            'name' =&gt; 'helloworld_index',
+            'params' =&gt; 'helloworld/home.html',
+           ),
+      ... 
+      );
+</code></pre>
+
+<p>The value of <code>params</code> is given as third parameter to the view.</p>
+
+<h2>Trees of Views</h2>
+
+<p>When you develop a project, you normally have several applications
+glued together into a single URL space. If you end up with 1000 views
+and a flat URL space, this would mean that the last view in the list
+would be matched after 1000 <code>preg_match</code> calls. Not very efficient and
+hard to maintain such a list. To avoid such issue, you can create a
+tree of regular expressions, that is, you can hook a simple URL map at
+a given point in another map:</p>
+
+<pre><code>array(
+      array('regex' =&gt; '#^/hello#',
+            'sub' =&gt; array(
+                     array('regex' =&gt; '#^/$#',
+                           'view' =&gt; array('\helloworld\views\Views', 'index'),
+                           'name' =&gt; 'helloworld_index',
+                          ),
+                     array('regex' =&gt; '#^/(.*)$#',
+                           'view' =&gt; array('\helloworld\views\Views', 'you'),
+                           'name' =&gt; 'helloworld_you',
+                         ),
+                     )
+           ),
+      array('regex' =&gt; '#^/$#',
+            'view' =&gt; array('\coreapp\views\Base', 'home'),
+            'name' =&gt; 'yourproject_home',
+           ),
+       );
+</code></pre>
+
+<p>Here you can see that the <code>helloworld_index</code> view will in fact match
+<code>/hello/</code> whereas the <code>yourproject_home</code> will match <code>/</code>. The <code>sub</code>
+approach is very practical as your <a href="project.html" title="Photon Project Structure Overview">project structure</a>
+contains normally theses files:</p>
+
+<pre><code>yourproject/urls.php
+yourproject/apps/documentation/urls.php
+yourproject/apps/blog/urls.php
+yourproject/apps/coreapp/urls.php
+</code></pre>
+
+<p>This means that you you put in your main <code>urls.php</code> something like:</p>
+
+<pre><code>return array(
+             array('regex' =&gt; '#^/$#',
+                   'view' =&gt; array('\coreapp\views\Base', 'home'),
+                   'name' =&gt; 'yourproject_home',
+                  ),
+             array('regex' =&gt; '#^/weblog#',
+                   'sub' =&gt; include __DIR__ . '/apps/blog/urls.php'
+                  ),
+             array('regex' =&gt; '#^/doc#',
+                   'sub' =&gt; include __DIR__ . '/apps/documentation/urls.php'
+                  ),
+             array('regex' =&gt; '#^/core#',
+                   'sub' =&gt; include __DIR__ . '/apps/coreapp/urls.php'
+                  ),
+           );
+</code></pre>
+
+<p>Your mapping ends up being simple, easy to read and effecient. Do not
+be afraid by the includes, they have no performance impact at all as
+they are loaded at the very start of the Photon server and never
+again. Yes, an application server provides a lot of performance goodies.</p>
+
+<h2>Anchoring A Photon Project In A Larger URL Space</h2>
+
+<p>Sometimes, you do not want to serve the full domain with a Photon
+project, for example, you only want to provide service to
+<code>yourdomain.com/weblog</code>. In this case, you need to define the
+<code>base_urls</code> key in your configuration file with the <code>/weblog</code> value
+(note the absence of trailing slash):</p>
+
+<pre><code>return array(
+             ....
+             'base_urls' =&gt; '/weblog',
+            );
+</code></pre>
+
+<p>Pay attention that if you have a <code>/weblog</code> anchor, you also need to
+have the corresponding route in your Mongrel2 configuration, for
+example:</p>
+
+<pre><code>Host(name="localhost", 
+     routes={'/weblog': photon_handler}
+    )
+</code></pre>
+
+<h2>Getting The Path From The View Name</h2>
+
+<p>The URL map is used both ways, first to find the view matching an URL
+but also to find the URL of a view when you want to redirect a user to
+a given place. Suppose your user is submitting a form and in case of
+success you want to redirect it to a thank you page. As your
+application can be hooked at any place in the URL space, you do not
+know at the time of writing what will be the URL of the the thank you
+page:</p>
+
+<pre><code>function register($request, $match)
+{
+    if ('POST' == $request-&gt;method) {
+        $form = new RegisterForm($request-&gt;POST);
+        if ($form-&gt;isValid()) {
+            $form-&gt;save();
+            $url = '/thank/you';
+            return new \photon\http\response\Redirect($url);
+        }
+    } else {
+        $form = new RegisterForm();
+    }
+    return shortcuts\Template::RenderToResponse('myapp/register.html', 
+                                                array('form' =&gt; $form), 
+                                                $request);
+}
+</code></pre>
+
+<p>Here you have the hard coded <code>/thank/you</code>, but you can do better, you
+can let Photon find the URL based on the <code>name</code> of the view.</p>
+
+<pre><code>$url = \photon\core\URL::forView('myapp_thankyou');
+</code></pre>
+
+<p>If you have a view named <code>myapp_thankyou</code> the path will automatically
+be generated, this, even if this view is inside a <code>sub</code> or if you have
+defined a special <code>base_urls</code> in your configuration file. The net
+result is that <strong>all the URLs are defined in the URL map</strong>.</p>
+
+  </div></div>
+  <div class="grid_3">
+    
+    <div id="docmenu">
+      <h4>Other Documentation</h4>
+      <p>
+	&raquo;&nbsp;<a href="project.html">Project structure</a><br />
+	&raquo;&nbsp;<a href="coding-conventions.html">Coding standards</a><br />
+	&raquo;&nbsp;<a href="configuration.html">configuration</a><br />
+	&raquo;&nbsp;<a href="lifecycle.html">lifecycle</a><br />
+	&raquo;&nbsp;<a href="principles.html">principles</a><br />
+	&raquo;&nbsp;<a href="session.html">session</a><br />
+	&raquo;&nbsp;<a href="storage.html">storage</a><br />
+
+	&raquo;&nbsp;<a href="testing.html">testing</a><br />
+
+	&raquo;&nbsp;<a href="tasks.html">Background Tasks</a><br />
+	&raquo;&nbsp;<a href="performance.html">Performance benchmark</a><br />
+      </p>
+    </div>
+    
+  </div>
+</div>
+
+<div id="footer">
+  <div class="container_12">
+    <div class="grid_9 suffix_3">
+      <p>©&nbsp;2014 <a href="../about.html">Céondo Ltd</a> and contributors.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

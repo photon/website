@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Photon, High Performance PHP &amp; Mongrel2 Framework</title>
+<meta charset="utf-8">
+<meta name="description" content="A high performance PHP framework using Mongrel2 and ZeroMQ.">
+<link href="http://fonts.googleapis.com/css?family=Josefin+Sans:bold" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="media/css/merged.css" />
+
+
+</head>
+<body>
+
+<div id="header">
+<div class="container_12">
+  <div class="grid_12" id="titlepage">
+    <h1>Photon, The High Performance PHP &amp; Mongrel2 Framework</h1>
+
+
+
+  </div>
+</div>
+</div>
+
+
+<div class="container_12" id="main">
+  <div class="grid_10"><div class="wrapper">
+<div class="tabs">
+<ul>
+<li class="active"><a href="index.html">Home</a></li>
+<li><a href="download.html">Download</a></li>
+<li><a href="doc.html">Documentation</a></li>
+<li><a href="community.html">Community</a></li>
+<li><a href="about.html">About</a></li>
+</ul>
+</div>
+
+
+
+
+
+
+<h2><strong>Photon</strong> is a high performance micro PHP framework.</h2>
+
+
+
+<dl>
+<dt><strong>High performance</strong><dt>
+<dd><strong>Photon</strong> is run behind <a href="http://www.mongrel2.org">Mongrel2</a> and is <a href="doc/performance.html">3 to 10 times faster</a> than Zend, Symfony and the best standard mod_php frameworks.</dd>
+<dt><strong>Micro</strong><dt>
+<dd><strong>Photon</strong> does not try to do everything, the core is small, easy to understand and without magic.</dd>
+<dt><strong>Tested</strong><dt>
+<dd><strong>Photon</strong> is delivered with a 100% test coverage.</dd>
+
+<dt><strong>Asynchronous</strong><dt>
+<dd>Easily manage <a href="doc/tasks.html">background tasks</a> to send emails, index your content, perform long running jobs.</dd>
+<dt><strong>Message Passing</strong><dt>
+<dd>Built on top of <a href="http://www.zeromq.org">ZeroMQ</a>, you can integrate your <strong>Photon</strong> project with your business logic (Python, C/C++, Fortran with C, R with Python) easily.</dd>
+</dl>
+
+<p>
+<strong>Photon</strong> is a technology preview. It is not yet recommended to use it in production.
+</p>
+
+<h2>Why is Photon Different?</h2>
+
+<p>
+At the core <strong>Photon</strong> is a PHP application server. That
+is, your code is loaded once at the start and then never again until
+the next restart. This makes <strong>Photon</strong> fast without the
+need of APC.
+</p>
+
+<p>
+An application server communicating over <strong>ZeroMQ</strong> means:
+</p>
+
+<ul>
+<li>You can open long running connections to your backend.</li>
+<li>You can easily start new workers on different hosts than <strong>Mongrel2</strong>.</li>
+<li>You can run background operations just after sending the response to the client (index the content, send emails).</li>
+<li>You can efficiently stream data to your clients (realtime chat, stats, etc.).</li>
+</ul>
+
+
+<h2>Frequently Asked Questions</h2>
+
+<h3>Why a micro framework?</h3>
+
+<p>
+You start a framework, then you add components, then you add magic to
+hide the complexity of all the components you added, then you add
+helpers to work nicely with the magic. At the end, your PHP framework
+archive is bigger than the code of your webserver and most of the
+projects need to use 5% of it. So, a micro framework is a framework
+doing perfectly these 5%.
+</p>
+<p>
+Soon, you will be able to downloads high quality components for your
+web application through the <strong>Particles Project</strong>.
+</p>
+
+<h3>Why targeting Mongrel2?</h3>
+
+<p>
+<strong><a href="http://www.mongrel2.org">Mongrel2</a></strong> is a
+very well designed, high performance server developed by pragmatic
+users who do not like bloated software. The use
+of <strong>ZeroMQ</strong> as the communication hub makes it extremely
+flexible while keeping the incredible performance. As a result, one
+can easily write part of a project with <strong>Photon</strong> and
+use other languages for some special parts. Oh, and the community
+behind <strong>Mongrel2</strong> is really nice.
+</p>
+
+<h3>What is the interest of ZeroMQ?</h3>
+
+<p>
+<strong><a href="http://www.zeromq.org">ZeroMQ</a></strong> is a high
+performance messaging layer on top of TCP, IPC or PGM multicast. With ZeroMQ,
+you can easily get a worker to connect to the Mongrel2 server over
+your LAN, this makes extremely easy to distribute your workers on
+several systems with zero configuration. For example, you can migrate
+your workers from one host to another without downtime.
+</p>
+
+<pre>
+# Start Photon on server 1, all the load is handled by server1
+you@server1:~/myproject$ hnu server start
+# Start Photon on server 2
+you@server2:~/myproject$ hnu server start
+# Now the requests are spread over server1 and server 2
+# Stop Photon on the first server
+you@server1:~/myproject$ hnu server stop
+# All the load is handled by server 2 without any downtime
+# and no reconfiguration of Mongrel2.
+</pre>
+
+<p>
+Of course you can distribute the load over your workers with more than
+just a round robin pattern.
+</p>
+
+<h3>Why not just a Mongrel2 adapter for an existing framework?</h3>
+
+<p>
+To really take benefit of <strong>Mongrel2</strong> one needs to have
+an asynchronous framework. With <strong>Mongrel2</strong> you do not
+have the traditional one request get one answer approach. This means
+that the standard PHP SAPI, which needs for each request an answer, is
+not adapted. As all the current frameworks are using the one request,
+one answer approach, you cannot take full benefits
+of <strong>Mongrel2</strong> with them. For example, you cannot easily
+create an MP3 streamer or a realtime chat application.
+</p>
+
+<h3>What is the release number convention?</h3>
+
+<ul>
+<li><code>0.0.XX</code>: will be the first alpha releases.</li>
+<li><code>0.1.0</code>: will be the first beta release, you can expect a couple of beta releases to get the core components up and running.</li>
+<li><code>1.0.0</code>: will be the first stable release.</li>
+</ul>
+
+<p>
+Once the stable release will be reached, the formalism will be: <code>MAJOR.MINOR.PATCH</code>.
+</p>
+
+<h2>Photon Authors</h2>
+
+<p>
+<strong>Photon</strong> is a project of Loïc d'Anterroches
+for <a href="http://www.ceondo.com">Céondo&nbsp;Ltd</a>. 
+<strong>Photon</strong> is licensed under the LGPL making it
+easy to integrate the code in other open source projects or closed
+source commercial applications.
+</p>
+
+</div>
+  </div>
+  <div class="grid_2">
+
+  </div>
+</div>
+
+<div id="footer">
+  <div class="container_12">
+    <div class="grid_10 suffix_2">
+      <p>©&nbsp;2014 <a href="about.html">Céondo Ltd</a> and contributors.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

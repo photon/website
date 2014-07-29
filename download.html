@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Download - Photon, High Performance PHP &amp; Mongrel2 Framework</title>
+<meta charset="utf-8">
+<meta name="description" content="A high performance PHP framework using Mongrel2 and ZeroMQ.">
+<link href="http://fonts.googleapis.com/css?family=Josefin+Sans:bold" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="media/css/merged.css" />
+
+
+</head>
+<body>
+
+<div id="header">
+<div class="container_12">
+  <div class="grid_12" id="titlepage">
+    <h1>Get Photon, The High Performance PHP Framework</h1>
+
+
+
+  </div>
+</div>
+</div>
+
+
+<div class="container_12" id="main">
+  <div class="grid_10"><div class="wrapper">
+<div class="tabs">
+<ul>
+<li><a href="index.html">Home</a></li>
+<li class="active"><a href="download.html">Download</a></li>
+<li><a href="doc.html">Documentation</a></li>
+<li><a href="community.html">Community</a></li>
+<li><a href="about.html">About</a></li>
+</ul>
+</div>
+
+
+
+
+<h2><strong>Get Photon</strong> the high performance micro PHP framework. </h2>
+
+<p>
+<strong>Photon</strong> is available as a <a href="http://dist.photon-project.com">PEAR package</a>, the following 
+instructions to get your setup running are for a relatively recent Debian 
+based Linux distribution. You may be interested in the <a href="doc/installation-osx.html">installation guide for OS X</a>.<br>
+You need of course to have first PHP 5.3.2 or higher installed:
+</p>
+
+<pre><code>apt-get update 
+apt-get install php5-cli php5-curl php5-dev php5-gd php5-geoip 
+apt-get install php5-imap php-pear libcurl4-openssl-dev php5-mcrypt</code></pre>
+
+<h3>ZeroMQ Installation</h3>
+
+<p>
+The installation is a bit more complex than your usual package
+installation as we are going to build ZeroMQ from the sources.
+</p>
+
+<pre><code>apt-get install build-essential uuid-dev wget pkg-config
+mkdir -p /home/vendors
+cd /home/vendors && wget http://download.zeromq.org/zeromq-2.1.10.tar.gz
+cd /home/vendors && tar -xzf zeromq-2.1.10.tar.gz
+cd /home/vendors/zeromq-2.1.10 && ./configure && make
+cd /home/vendors/zeromq-2.1.10 && make install
+ldconfig</code></pre>
+
+
+<h3>Mongrel2 Installation</h3>
+
+<p>
+Mongrel2 is also available from source, but it is really easy to build it.
+</p>
+
+<pre><code>apt-get install sqlite3 libsqlite3-dev uuid-dev libcurl4-openssl-dev
+cd /home/vendors && wget http://mongrel2.org/static/downloads/mongrel2-1.7.5.tar.bz2
+cd /home/vendors && tar -xjvf mongrel2-1.7.5.tar.bz2
+cd /home/vendors/mongrel2-1.7.5 && make clean all
+cd /home/vendors/mongrel2-1.7.5 && make install
+ldconfig</code></pre>
+
+<p>
+Now you have everything ready to install Photon with the PEAR package.
+</p>
+
+<h3>Photon Installation</h3>
+
+<pre><code>pear channel-discover dist.photon-project.com
+pear channel-discover components.ez.no
+pear channel-discover pear.phpunit.de
+pear channel-discover pear.symfony-project.com
+pear upgrade PEAR
+pear install --alldeps photon/photon-beta
+pecl install xdebug
+pecl install pecl_http
+echo 'extension=zmq.so' > /etc/php5/conf.d/zmq.ini
+echo 'zend_extension=/usr/lib/php5/20090626+lfs/xdebug.so' > /etc/php5/conf.d/xdebug.ini
+echo 'extension=http.so' > /etc/php5/conf.d/http.ini
+chmod +r /etc/php5/conf.d/*.ini
+</code></pre>
+
+<p>
+The long list of channel discovery is to automatically download the
+dependencies of Photon. These dependencies are nearly all for PHPUnit. 
+You can get updates via the <a href="http://dist.photon-project.com/feed.xml">feed</a> and simply browse <a href="http://dist.photon-project.com/">the list of available versions</a>.
+</p>
+
+<h3>Installation Test</h3>
+
+<p>
+You can simply run the Photon integrity tests.
+</p>
+
+<pre><code>hnu selftest</code></pre>
+
+<h3>Create Your First Project</h3>
+
+<pre><code>hnu init firstproject</code></pre>
+
+<h3>Photon Upgrade</h3>
+
+<pre><code>pear update-channels
+pear upgrade photon/photon-beta</code></pre>
+
+<h3>Get the source</h3>
+
+<p>
+Photon has its own <a href="http://www.indefero.net">Indefero project</a>, this makes it easy to checkout the <a href="http://projects.ceondo.com/p/photon/source/tree/develop/">Photon source code</a>.
+</p>
+
+<h3>Learn from the others</h3>
+
+<p>
+You can subscribe to the mailing list: <strong>photon.users@librelist.com</strong>, to subscribe, just send an email with <em>Hello</em> in the body to the list and follow the instructions. You can <a href="http://librelist.com/browser/photon.users/">read the archives</a>.
+</p>
+<p>
+Come on IRC, we are on the channel #photonproject on the FreeNode servers.
+</p>
+
+</div>
+  </div>
+  <div class="grid_2">
+
+  </div>
+</div>
+
+<div id="footer">
+  <div class="container_12">
+    <div class="grid_10 suffix_2">
+      <p>©&nbsp;2014 <a href="about.html">Céondo Ltd</a> and contributors.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

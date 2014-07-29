@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> - Documentation - Photon, High Performance PHP &amp; Mongrel2 Framework</title>
+<meta charset="utf-8">
+<meta name="description" content="A high performance PHP5 framework using Mongrel2 and ZeroMQ.">
+<link href="http://fonts.googleapis.com/css?family=Josefin+Sans:bold" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="../media/css/merged.css" />
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-408943-17']);
+  _gaq.push(['_setDomainName', '.photon-project.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="container_12">
+  <div class="grid_9"><div class="wrapper">
+      <div class="tabs">
+<ul>
+<li><a href="../index.html">Home</a></li>
+<li><a href="../download.html">Download</a></li>
+<li class="active"><a href="../doc.html">Documentation</a></li>
+<li><a href="../community.html">Community</a></li>
+<li><a href="../about.html">About</a></li>
+</ul>
+</div>
+
+      
+      <p>By Loïc d'Anterroches, <a href="http://xhtml.net">xhtml.net</a>, 18th of February, 2011</p>
+
+<h1>Coding Standards and Conventions</h1>
+
+<p>The coding standards and conventions of Photon. How to write some nice 
+looking and well structured code.</p>
+
+<h2>The Conventions Are Simple</h2>
+
+<p>The base is the <a href="http://pear.php.net/manual/en/standards.php" title="The PEAR Coding Standards">PEAR Coding Standards</a> with some special
+cases. Read the code of <strong>Photon</strong> to have a good feeling of what is
+done.</p>
+
+<h3>Use namespaces</h3>
+
+<p>Each class must live in a namespace, the namespace is in lower case
+and reflects the directory structure. For example:</p>
+
+<pre><code>namespace yourapplication\views;
+
+class Base
+{
+    public function foo($request, $match)
+    {
+        return false;
+    }
+}
+
+class Other {}
+</code></pre>
+
+<p>is available in the file <code>src/yourapplication/views.php</code>, with the
+<code>src</code> directory in your include path. This way, you can have many
+classes in one file. The one file per class approach is not used as it
+is extremely annoying when you want to have <em>just a small class</em> for a
+data structure or as a little utility tool. For people used to code in
+Python, this is effectively following the Python convention. This
+convention as proved itself extremely robust over the years.</p>
+
+<p>If you can throw an exception from your code, use an exeception from
+your namespace or a <a href="http://www.php.net/manual/en/spl.exceptions.php">predefined exception</a> 
+when it makes sense.</p>
+
+<pre><code>namespace yourapplication\yourlib;
+class Exception extends \Exception {}
+class Foo
+{
+    public function bar($what)
+    { 
+        // It will throw the \yourapplication\yourlib\Exception which
+        // can be caught with:
+        // catch (\Exception $e) {}
+        // or to be fined grained:
+        // catch (\yourapplication\yourlib\Exception $e) {}
+        throw new Exception();
+    }
+}
+</code></pre>
+
+<h3>No Interfaces and No Type Hints</h3>
+
+<p>If you unit test your code, these simply do not make sense. Type
+hinting and interfaces, because of the dynamic nature of PHP, are
+evaluated at runtime, this means, that each time you access a method,
+function the check will be made. You basically check the same thing,
+again and again, days after days.</p>
+
+<p>So, just unit test correctly your code, this will catch all the
+errors.</p>
+
+<p>If you can come up with a good reason to use type hints and
+interfaces, feel free to come on the list and discuss about it. I am
+against them at the moment, only because I have yet to find a good
+reason to use them.</p>
+
+<h3>Minimize the Number of Variables</h3>
+
+<p>Do not do things like:</p>
+
+<pre><code>$a = my_function_foo($input);
+$b = other_function($a);
+</code></pre>
+
+<p>This makes a copy of the data in <code>$a</code> and this makes the understanding
+of the code harder because you have more variables to track in your
+head.</p>
+
+<pre><code>$b = other_function(my_function_foo($input));
+</code></pre>
+
+<h3>Leave a Blank Line Before a Return Statement</h3>
+
+<p>On a small function like the one below, it may looks futile, but as
+soon as your functions start to have more than 5 lines, this makes the
+<code>return</code> statement pop out and improves a lot the reading speed of the
+code.</p>
+
+<pre><code>function foo_bar($bing)
+{
+    if (0 === strlen($bing)) { 
+
+        return 'no bing!';
+    }
+    $bing = mb_strtoupper($bing);
+
+    return $bing;
+}
+</code></pre>
+
+<h3>Keep a Space Before and After the Dot in Concatenation</h3>
+
+<p>This is again a readability issue, the added space allow quick in mind
+tokenization of the code.</p>
+
+<pre><code>$good = $old . 'foo' . substr($another, 1, 4) . ' bar';
+$bad = $old.'foo'.substr($another, 1, 4).' bar';
+</code></pre>
+
+<h3>Indent Ternary Operator When a Bit Long</h3>
+
+<p>This allow very fast scanning of the conditions and feels like a
+compact if/then/else block.</p>
+
+<pre><code>$foo = ('abc' === $foobar)
+    ? 'abc' . 'foo' . substr($another, 1, 4) . ' bar'
+    : 'not abc' . 'foo' . substr($another, 1, 4) . ' bar';
+</code></pre>
+
+<h3>Use an English Sentence as Exception Message</h3>
+
+<p>When you throw an exception from your code, the message must be a
+clean and understandable message. It must start with an upper case
+letter and end with a period. For example:</p>
+
+<pre><code>throw new Exception(sprintf('The system was not able to open the file: %s.',
+                            realpath($thefile)));
+</code></pre>
+
+<p>The trace will provide the coder with the needed information to debug
+and fix the problem and the clean message will make your end users
+feel good.</p>
+
+<h3>Make Your If Statements Fast</h3>
+
+<p>It is a bit faster and clearer to put the constant first and to do an
+exact equality match.</p>
+
+<pre><code>if ('this is' === $good) {
+    if ($this_is == 'bad') {
+        // This will also automatically prevent you
+        // to do by mistake an assignement in the if
+        // block.
+    }
+}
+</code></pre>
+
+<h3>Clean After Yourself</h3>
+
+<p>At the end of a request, <strong>Photon</strong> will not clean the global
+scope. If you are opening a file, do not forget to close it. If you
+open a connection which is not supposed to be permanent, close it too.</p>
+
+<h3>Take Care of your Memory Usage</h3>
+
+<p><strong>Photon</strong> is running as a daemon without a maximum memory usage, if
+your application is reading data from the outside world and you have
+no idea how big the data will be, you should pay attention. A good way
+to avoid memory ballooning is to store the data in a memory stream
+with swapping. For example:</p>
+
+<pre><code>$fp = fopen('php://temp/maxmemory:5242880', 'r+');
+fputs($fp, generate_unknown_large_output());
+rewind($fp);
+// Operate on the data, for example check the size:
+$info = fstat($fp);
+$size = $info['size'];
+fclose($fp);
+</code></pre>
+
+<p>Here, you have the data in the <code>$fp</code> and if the data is bigger than
+5MB, it will be swapped on disk. If below 5MB, as everything is done in
+memory, it is really fast.</p>
+
+<h3>Unit Test Everything</h3>
+
+<p>Really everything. You can easily run your tests from the command
+line, it will save your day in the future. 
+<a href="testing.html" title="How to write and run Photon tests.">Read more about testing</a>.</p>
+
+<h3>Keep the Logic Within 45 Lines</h3>
+
+<p>Your functions should not be more than 45 lines in length. Sometimes
+you cannot really do so, but try. Long functions are hard to tests but
+also hard to follow. 45 lines is usually what you can see in one go in
+a text editor.</p>
+
+<h3>Be Positive in Default Arguments</h3>
+
+<p>Ensure that the default argument is <code>true</code> not <code>false</code>. For example, compare:</p>
+
+<pre><code>function runNegative($what, $payload, $raw=false)
+{
+    if (!$raw) {
+        $payload = json_encode($payload);
+    } 
+    ...
+}
+
+function runPositive($what, $payload, $encode=true)
+{
+    if ($encode) {
+        $payload = json_encode($payload);
+    } 
+    ...
+}
+</code></pre>
+
+<p>It is more natural to follow the positive way than the negative.</p>
+
+<h3>Do Not Include the Trailing Slash in Folders</h3>
+
+<p>If your function returns a directory/folder path, do not include the
+trailing slash.</p>
+
+<pre><code>function thisIsBad()
+{
+    return '/var/log/photon/';
+}
+function thisIsGood()
+{
+    return '/var/log/photon';
+}
+</code></pre>
+
+<p>This is the convention followed by all the functions, methods in PHP
+and Unix tools.</p>
+
+  </div></div>
+  <div class="grid_3">
+    
+    <div id="docmenu">
+      <h4>Other Documentation</h4>
+      <p>
+	&raquo;&nbsp;<a href="project.html">Project structure</a><br />
+	&raquo;&nbsp;<a href="coding-conventions.html">Coding standards</a><br />
+	&raquo;&nbsp;<a href="configuration.html">configuration</a><br />
+	&raquo;&nbsp;<a href="lifecycle.html">lifecycle</a><br />
+	&raquo;&nbsp;<a href="principles.html">principles</a><br />
+	&raquo;&nbsp;<a href="session.html">session</a><br />
+	&raquo;&nbsp;<a href="storage.html">storage</a><br />
+
+	&raquo;&nbsp;<a href="testing.html">testing</a><br />
+
+	&raquo;&nbsp;<a href="tasks.html">Background Tasks</a><br />
+	&raquo;&nbsp;<a href="performance.html">Performance benchmark</a><br />
+      </p>
+    </div>
+    
+  </div>
+</div>
+
+<div id="footer">
+  <div class="container_12">
+    <div class="grid_9 suffix_3">
+      <p>©&nbsp;2014 <a href="../about.html">Céondo Ltd</a> and contributors.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

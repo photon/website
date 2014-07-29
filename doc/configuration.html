@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> - Documentation - Photon, High Performance PHP &amp; Mongrel2 Framework</title>
+<meta charset="utf-8">
+<meta name="description" content="A high performance PHP5 framework using Mongrel2 and ZeroMQ.">
+<link href="http://fonts.googleapis.com/css?family=Josefin+Sans:bold" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="../media/css/merged.css" />
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-408943-17']);
+  _gaq.push(['_setDomainName', '.photon-project.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="container_12">
+  <div class="grid_9"><div class="wrapper">
+      <div class="tabs">
+<ul>
+<li><a href="../index.html">Home</a></li>
+<li><a href="../download.html">Download</a></li>
+<li class="active"><a href="../doc.html">Documentation</a></li>
+<li><a href="../community.html">Community</a></li>
+<li><a href="../about.html">About</a></li>
+</ul>
+</div>
+
+      
+      <p>By Loïc d'Anterroches, <a href="http://xhtml.net">xhtml.net</a>, 25th of February, 2011</p>
+
+<h1>Configuration of a Project</h1>
+
+<p>The goal of the configuration is just to provide runtime 
+information to the system in form of an associative array.</p>
+
+<p>The configuration of an application with Photon is extremely simple,
+at the top of your PHP code, you load the configuration container
+class. By convention, you should load it as <code>Conf</code>. You can then get
+the configuration value with a simple call:</p>
+
+<pre><code>use photon\config\Container as Conf;
+$foo = Conf::f('myapp_key', array('Sane default value'));
+</code></pre>
+
+<p>What is really important to keep in mind:</p>
+
+<ul>
+<li>Set <strong>sane and consistent default values</strong> for your application. 
+The minimum number of configuration key,
+the easier it will be for the end users to install your application
+and reuse it.</li>
+<li>Prefix the keys to avoid conflict with the core Photon configuration
+variables and other applications. For example use the key
+<code>myapp_admin</code> if you have created the <code>myapp</code> application.</li>
+<li>Reuse as much as possible the core configuration keys, for example
+the admin email address, <code>from_email</code>, <code>debug</code> settings, etc. This
+will ensure consistent behaviour of the applications and ease of
+configuration.</li>
+<li>If you change a configuration key in a request, you need to set it
+back just after, to handle correctly the next request.</li>
+</ul>
+
+<h2>Some Default Configuration Keys</h2>
+
+<ul>
+<li><p><code>debug</code>: is the application running in debug mode.</p></li>
+<li><p><code>from_email</code>: default source email whent sending an email.</p></li>
+<li><p><code>template_folders</code>: array of folders from where the templates can be loaded.</p></li>
+<li><p><code>urls</code>: array of the URL mapping.</p></li>
+<li><p><code>base_urls</code>: the base for the URL mapping, you would put <code>'/foobar'</code> if your project is accessible as <code>http://yourdomain.tld/foobar/</code>.</p></li>
+<li><p><code>installed_apps</code>: array of installed apps in the project, for example <code>array('photonweb', 'myapp')</code>.</p></li>
+<li><p><code>installed_tasks</code>: associative array of installed tasks, for example:</p></li>
+</ul>
+
+<pre><code>      array('photon_timeserver' =&gt; '\photon\task\TimeServer',
+             'photon_logger' =&gt; '\photon\task\Logger').
+</code></pre>
+
+<ul>
+<li><p><code>tmp_folder</code>: temp folder for the compiled templates.</p></li>
+<li><p><code>secret_key</code>: your unique to the project secret key to hmac
+validation of the cookies and more. This is critical to have a
+unique key per project installation.</p></li>
+<li><p><code>pid_file</code>: where the master server pid is written (<code>'./run.pid'</code>).</p></li>
+</ul>
+
+<h2>The Configuration File</h2>
+
+<p>The configuration file is a simple PHP file but you can use anything
+you want which can then produce a simple PHP array and return it.</p>
+
+<p>Each method has pros/contras, but basically, the goal is simply to
+provide the application server with an array of key/value pairs at
+startup time. Nothing more.</p>
+
+<p>For examples:</p>
+
+<pre><code>&lt;?php
+$myconf = include 'path/to/config.php';
+$myconf = parse_ini_file('path/to/config.ini');
+$myconf = YourYAMLParser::load('path/to/config.yaml');
+$myconf = array('debug' =&gt; true, 'photon_rocks' =&gt; true);
+return $myconf;
+// The configuration is then simply loaded by Photon this way:
+Conf::load($myconf);
+</code></pre>
+
+<p>What is interesting is that the process of getting the information can
+be as complex as needed, for example, you could have a configuration
+file which is going in fact to ask a central service its configuration
+based on the machine hostname.</p>
+
+<pre><code>&lt;?php
+$zoo = \myapp\config\Loader::getService('zookeeper');
+$config = $zoo-&gt;giveMeMyConfig(gethostname()));
+return $config;
+</code></pre>
+
+<p>If this takes a second or two to run, this is fine as this is done
+only once at the startup of the <strong>Photon</strong> process.</p>
+
+  </div></div>
+  <div class="grid_3">
+    
+    <div id="docmenu">
+      <h4>Other Documentation</h4>
+      <p>
+	&raquo;&nbsp;<a href="project.html">Project structure</a><br />
+	&raquo;&nbsp;<a href="coding-conventions.html">Coding standards</a><br />
+	&raquo;&nbsp;<a href="configuration.html">configuration</a><br />
+	&raquo;&nbsp;<a href="lifecycle.html">lifecycle</a><br />
+	&raquo;&nbsp;<a href="principles.html">principles</a><br />
+	&raquo;&nbsp;<a href="session.html">session</a><br />
+	&raquo;&nbsp;<a href="storage.html">storage</a><br />
+
+	&raquo;&nbsp;<a href="testing.html">testing</a><br />
+
+	&raquo;&nbsp;<a href="tasks.html">Background Tasks</a><br />
+	&raquo;&nbsp;<a href="performance.html">Performance benchmark</a><br />
+      </p>
+    </div>
+    
+  </div>
+</div>
+
+<div id="footer">
+  <div class="container_12">
+    <div class="grid_9 suffix_3">
+      <p>©&nbsp;2014 <a href="../about.html">Céondo Ltd</a> and contributors.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

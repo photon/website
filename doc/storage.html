@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> - Documentation - Photon, High Performance PHP &amp; Mongrel2 Framework</title>
+<meta charset="utf-8">
+<meta name="description" content="A high performance PHP5 framework using Mongrel2 and ZeroMQ.">
+<link href="http://fonts.googleapis.com/css?family=Josefin+Sans:bold" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="../media/css/merged.css" />
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-408943-17']);
+  _gaq.push(['_setDomainName', '.photon-project.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="container_12">
+  <div class="grid_9"><div class="wrapper">
+      <div class="tabs">
+<ul>
+<li><a href="../index.html">Home</a></li>
+<li><a href="../download.html">Download</a></li>
+<li class="active"><a href="../doc.html">Documentation</a></li>
+<li><a href="../community.html">Community</a></li>
+<li><a href="../about.html">About</a></li>
+</ul>
+</div>
+
+      
+      <p>By Loïc d'Anterroches, <a href="http://xhtml.net">xhtml.net</a>, 25th of February, 2011</p>
+
+<h1>Application Data Storage</h1>
+
+<p>Photon does not inforce a given storage engine. We like MongoDB, but you can
+use any storage you like, from RAM to text files, through whatever RDBMS or 
+NoSQL system you want. Here are the principles you should follow in your
+application to follow the Photon storage principles.</p>
+
+<h2>Accept That Not Everybody Like Your Storage System</h2>
+
+<p>This is maybe the hardest one. When you are comfortable with a storage
+system, you tend to see all the nice things you can do with but not
+the issues related to it. You know how to write your code to take
+maximum benefits of your storage system and to avoid the pain
+points. But for other people, the pain points can be stoppers, for
+example, they may not have the hardware to simply run your system. So
+<strong>do not write an application which requires a given storage</strong>.</p>
+
+<p>It is very easy to have a single and efficient level of abstraction to
+allow anybody to write their own storage engine.</p>
+
+<p>For example, suppose you want to store log information for your
+application, you can have a simple class with the methods:</p>
+
+<pre><code>class Storage
+{
+     public function store($timestamp, $category, $data);
+     public function retrieve($criteria);
+}
+</code></pre>
+
+<p>Then, in your application, you just load your storage:</p>
+
+<pre><code>use photon\config\Container as Conf;
+$class = Conf::f('myapp_storage', 'myapp\storage\Storage');
+$store = new $class();
+</code></pre>
+
+<p>by default, it is sane and use your class, which may use only
+<a href="http://sqlite.org">SQLite</a> or <a href="http://mongodb.org">MongoDB</a>, but you give the opportunity
+for your users to write their own storage by exposing a simple API. It
+is also very practical for unit testing.</p>
+
+<h2>Photon Storages</h2>
+
+<p>By default in <strong>Photon</strong>, this rules is always inforced and we try to
+always provide two storage implementations with <em>SQLite</em> and
+<em>MongoDB</em>. This way, you have examples following two different
+paradigms, RDBMS storage and document oriented.</p>
+
+<p>The default storage implementation is <em>MongoDB</em>, that is, the
+implementation if you but nothing in your configuration file. The
+configuration keys follow a standard approach:
+<code>photon_sessions_storage</code>, <code>photon_abtesting_storage</code>, etc.</p>
+
+  </div></div>
+  <div class="grid_3">
+    
+    <div id="docmenu">
+      <h4>Other Documentation</h4>
+      <p>
+	&raquo;&nbsp;<a href="project.html">Project structure</a><br />
+	&raquo;&nbsp;<a href="coding-conventions.html">Coding standards</a><br />
+	&raquo;&nbsp;<a href="configuration.html">configuration</a><br />
+	&raquo;&nbsp;<a href="lifecycle.html">lifecycle</a><br />
+	&raquo;&nbsp;<a href="principles.html">principles</a><br />
+	&raquo;&nbsp;<a href="session.html">session</a><br />
+	&raquo;&nbsp;<a href="storage.html">storage</a><br />
+
+	&raquo;&nbsp;<a href="testing.html">testing</a><br />
+
+	&raquo;&nbsp;<a href="tasks.html">Background Tasks</a><br />
+	&raquo;&nbsp;<a href="performance.html">Performance benchmark</a><br />
+      </p>
+    </div>
+    
+  </div>
+</div>
+
+<div id="footer">
+  <div class="container_12">
+    <div class="grid_9 suffix_3">
+      <p>©&nbsp;2014 <a href="../about.html">Céondo Ltd</a> and contributors.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

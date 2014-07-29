@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> - Documentation - Photon, High Performance PHP &amp; Mongrel2 Framework</title>
+<meta charset="utf-8">
+<meta name="description" content="A high performance PHP5 framework using Mongrel2 and ZeroMQ.">
+<link href="http://fonts.googleapis.com/css?family=Josefin+Sans:bold" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="../media/css/merged.css" />
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-408943-17']);
+  _gaq.push(['_setDomainName', '.photon-project.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="container_12">
+  <div class="grid_9"><div class="wrapper">
+      <div class="tabs">
+<ul>
+<li><a href="../index.html">Home</a></li>
+<li><a href="../download.html">Download</a></li>
+<li class="active"><a href="../doc.html">Documentation</a></li>
+<li><a href="../community.html">Community</a></li>
+<li><a href="../about.html">About</a></li>
+</ul>
+</div>
+
+      
+      <p>By Loïc d'Anterroches, <a href="http://xhtml.net">xhtml.net</a>, 20th of February, 2011</p>
+
+<h1>Background Tasks with Photon</h1>
+
+<p>Background tasks allow you to perform operations in the background
+to offload process intensive or specialized work. A good example is
+to use a task to manage a chat server.</p>
+
+<h2>A Task Run Something in the Background</h2>
+
+<p>Examples of tasks for you to have an idea:</p>
+
+<ul>
+<li>return the time to synchronize different systems;</li>
+<li>receive logs and write them to disk in batch every 60 seconds to make large writes;</li>
+<li>keep track of all the connected users in a chat and send them the current messages;</li>
+<li>send notifications emails to have the webpage refresh fast;</li>
+<li>small memory cache available for all the Photon processes;</li>
+<li>performing indexing of documents after insert or update.</li>
+</ul>
+
+<p>Good candidats to be converted as tasks:</p>
+
+<ul>
+<li>you do not need the answer to the operation for the client right now;</li>
+<li>the operation task more than 50 ms in average to complete;</li>
+<li>the operation serves as a reference data for others;</li>
+<li>the operation connect to remote systems with high latency.</li>
+</ul>
+
+<p><strong>Tasks can be asynchronous</strong>, they get a job to be done and do not
+return the answer directly or <strong>synchronous</strong>, they answer directly.</p>
+
+<h2>Asynchronous Mail Sender Task</h2>
+
+<p>Suppose we have a message to send to 25 persons during the processing
+of a request. For example, you have updated a bug with some comments
+and 25 persons want to be notified of the bug evolution. This would
+cost you a lot of time to send directly the emails, so we are going to
+send them through an asynchronous task.</p>
+
+<p>The task will take:</p>
+
+<ul>
+<li>the list of email addresses;</li>
+<li>the message subject;</li>
+<li>the message body.</li>
+</ul>
+
+<p>You will see that it is extremely simple to create such a task, you
+just need to define the method doing the work, simply named <code>work</code> and
+the name of the task.</p>
+
+<pre><code>// We always put the code in a namespace. Here you will put this code in
+// the yourproject/apps/mywebapp/task.php file.
+namespace mywebapp\task;
+// We need the project configuration to have the sender email.
+use photon\config\Container as Conf;
+
+class MailSender extends \photon\task\AsyncTask
+{
+    /**
+     * The name of the task. It must be unique.
+     */
+    public $name = 'mailsender';
+
+    /**
+     * We receive the work and send the emails.
+     */
+    public function work($socket)
+    {
+        // task get in the message its name, the id of the client requesting
+        // the work (good for logging) and the payload. Most of the time 
+        // the payload will be json encoded.
+        list($taskname, $client, $payload) = explode(' ', $socket-&gt;recv(), 3);
+        $payload = json_decode($payload);
+        $emails = $payload['emails'];
+        $subject = $payload['subject'];
+        $body = $payload['body'];
+        $from = ;
+        $headers = 'From: ' . Conf::f('from_email') . "\r\n" .
+                   'X-Mailer: Photon/' . \photon\VERSION;
+        foreach ($payload['emails'] as $to) {
+            // You just send your email as usual, maybe using some of the
+            // nice PEAR libs to do so.
+            mail($to, $payload['subject'], $payload['body'], $headers);
+        }
+    }
+}
+</code></pre>
+
+<p>Now, you have created your task, the last step is to install it. To do
+so, just add to your configuration file that the <code>mailsender</code> task is
+available as the <code>\mywebapp\task\MailSender</code> class.</p>
+
+<pre><code>return array( 
+    ...
+    'installed_tasks' =&gt; array('mailsender' =&gt; '\mywebapp\task\MailSender'),
+);
+</code></pre>
+
+<p>Now stop, start your project and list the available processes:</p>
+
+<pre><code>$ hnu server stop &amp;&amp; hnu server start
+$ hnu server list
+Photon id                                     Uptime        Served  Mem. (kB)  Peak mem. (kB)
+-----------------------------------------------------------------------------------------------
+loa-desktop-32559-1298195713                  0d00:00:54    0       1557       1567
+loa-desktop-32560-1298195713                  0d00:00:54    0       1557       1567
+loa-desktop-task-mailsender-32558-1298195713  0d00:00:54    0       1525       1540
+loa-desktop-32561-1298195713                  0d00:00:54    0       1557       1567
+-----------------------------------------------------------------------------------------------
+</code></pre>
+
+<p>You can see the line <code>loa-desktop-task-mailsender-32558-1298195713</code>,
+your task is available and ready to process work for you. Yeah! Tho
+next step is to send work to your task.</p>
+
+<p>So, in your code, we are going to send work to the <code>mailsender</code> task:</p>
+
+<pre><code>class MyViews
+{
+    public function updateTicket($request, $match)
+    {
+        // Do a lot of work to update the ticket
+        $payload = array(
+                 'emails' =&gt; array('foo1@example.com',
+                                   'foo2@example.com',
+                                   'foo3@example.com',
+                                   'foo4@example.com'),
+                 'subject' =&gt; 'Ticket 123 has been updated.',
+                 'body' =&gt; 'Hello, Photon is great and you too.');
+        // The runner will take care of the communication with the task,
+        // even if the task is on a remote system far away.
+        $runner = new \photon\task\Runner();
+        // The run call will return immediately!
+        $runner-&gt;run('mailsender', $payload);
+        return new \photon\http\Response('Ticket updated!', 'text/plain');
+    }
+}
+</code></pre>
+
+<p>Could it be simpler? You start a task runner <code>\photon\task\Runner</code> and
+send a payload to the <code>mailsender</code> task. Nothing more, nothing less.</p>
+
+<p>With a traditional framework, you need to setup manually a queue
+system, define a protocol, get workers to connect to the queue and
+supervise everything. Most of the time people are ending up installing
+<a href="http://gearman.org/" title="Gearman Work Server">Gearman</a> or rolling their own system. If this is just to
+send emails, this is really a lot of work for such a small job!</p>
+
+<h2>Synchronous Memory Cache</h2>
+
+<p>Now, even if we have a very fast framework, if you want to display a
+feed on your user page, it is better to retrieve the feed from a cache
+instead of getting it each time. So, we are going to create a memory
+cache task which will be available for all the Photon processes. We
+could cache the feed in the memory of each Photon process, but if you
+have 20 of them and have a refresh every 20 minutes, it means that you
+will have 20 fetches of the feed every 20 minutes. Not good.</p>
+
+<p>For a memory cache, one want to directly get the results of the
+request, the request being either to store or get a value. We are
+going to add the task in the same namespace as the previous task.</p>
+
+<pre><code>// We always put the code in a namespace. Here you will put this code in
+// the yourproject/tasks/mywebapp/task.php file.
+namespace mywebapp\task;
+
+// Here the MailSender task
+
+// Notice that we extend the "SyncTask"
+class MemoryCache extends \photon\task\SyncTask
+{
+    /**
+     * The name of the task. It must be unique.
+     *
+     * By convention, prefix the name with the name of your 
+     * application, this will save your day when you will need 
+     * to integrate another "mailer" task in your system.
+     */
+    public $name = 'mywebapp_memorycache';
+
+    /**
+     * This is the memory storage. 
+     *
+     * For each key we store: array($value, $expiration_time, $stats)
+     */
+    public static $storage = array();
+    public static $counter = 0;
+
+    /**
+     * We receive the work and answer directly.
+     */
+    public function work($socket)
+    {
+        list($taskname, $client, $payload) = explode(' ', $socket-&gt;recv(), 3);
+        $payload = json_decode($payload);
+        $ans = sprintf('%s %s %%s', $client, $taskname);
+        switch ($payload['action']) {
+        case 'get':
+            if (isset(self::$storage[$payload['key']]) 
+                &amp;&amp; self::$storage[$payload['key']][1] &gt; time()) {
+                $ans = sprintf($ans, 
+                               json_encode(self::$storage[$payload['key']][0]));
+                self::$storage[$payload['key']][2]++;
+            } else {
+                $ans = sprintf($ans, json_encode(null));
+                unset(self::$storage[$payload['key']]);
+            } 
+            break;
+        case 'put':
+            self::$storage[$payload['key']] = array($payload['val'], 
+                                              $payload['timeout'] + time(), 
+                                              0);
+            $ans = sprintf($ans, json_encode('OK'));
+            break;
+        case default:
+            $ans = sprintf($ans, json_encode('KO'));
+        }
+        $socket-&gt;send($ans);
+    }
+
+    /**
+     * the loop() method is called after each call to work or at least 
+     * every 200 ms. We are going to use it to clean the old keys.
+     *
+     * This is not strictly needed, but may prevent accumulation of dead
+     *  keys in the memory.
+     */
+    public function loop()
+    {
+        // checking every 200ms is not good, so we are going to check
+        // every few minutes
+        self::$counter++;
+        if (0 !== (self::$counter % 2000)) { 
+            return;
+        }
+        self::$counter = 0; // We reset the counter 
+        $time = time();
+        foreach (self::$storage as $key =&gt; $val) {
+            if ($val[1] &lt; $time) {
+                unset(self::$storage[$key]);
+            }
+        }
+    }
+}
+</code></pre>
+
+<p>As you can see, it is a bit more complex, but in less than 40 lines of
+code you have a functional albeit limited memory cache task. The
+really important point to notice is that you must both receive the
+work with <code>$socket-&gt;recv()</code> and send the answer with <code>$socket-&gt;send()</code>
+within the <code>work()</code> method. This is asynchronous task, that is, your
+client is waiting for your answer right now!</p>
+
+<p>Now, we have two tasks we can enable:</p>
+
+<pre><code>return array( 
+    ...
+    'installed_tasks' =&gt; array(
+                      'mailsender' =&gt; '\mywebapp\task\MailSender',
+                      'mywebapp_memorycache' =&gt; '\mywebapp\task\MemoryCache',
+
+                     ),
+    );
+</code></pre>
+
+<p>By default, a task is listening on the <code>tcp://127.0.0.1:5997</code> socket,
+as we do not want both tasks to listen on the same socket, we are
+going to tell the memory cache to listen on another socket. This is
+done in the configuration file:</p>
+
+<pre><code>return array( 
+    ...
+    'installed_tasks' =&gt; array(
+                      'mailsender' =&gt; '\mywebapp\task\MailSender',
+                      'mywebapp_memorycache' =&gt; '\mywebapp\task\MemoryCache',
+
+                     ),
+    'photon_task_mywebapp_memorycache' =&gt; 
+               array('sub_addr' =&gt; 'tcp://127.0.0.1:5998'),
+    );
+</code></pre>
+
+<p>We just say, instead of listening to the standard socket, use another one. Now, stop and start photon, then check what you have as running tasks:</p>
+
+<pre><code>$ hnu server list
+Waiting for the answers...
+Photon id                                    Uptime        Served  Mem. (kB)  Peak mem. (kB)
+----------------------------------------------------------------------------------------------
+loa-desktop-3201-1298206641                            0d00:00:02    0       1558       1568
+loa-desktop-task-mailsender-3198-1298206641            0d00:00:02    0       1536       1551
+loa-desktop-3200-1298206641                            0d00:00:02    0       1558       1568
+loa-desktop-task-mywebapp_memorycache-3197-1298206641  0d00:00:01    0       1536       1551
+loa-desktop-3199-1298206641                            0d00:00:02    0       1558       1568
+----------------------------------------------------------------------------------------------
+5 Photon servers running. Memory usage: 7749kB.
+</code></pre>
+
+<p>Perfect, you have the default three handlers receiving the requests
+from Mongrel2 and the two background tasks. Let's have fun and use
+this new task.</p>
+
+<pre><code>class MyViews
+{
+    public function displayFeed($request, $match)
+    {
+        $payload = array('action' =&gt; 'get',
+                         'key' =&gt; 'my_feed');
+        $runner = new \photon\task\Runner();
+        // The run call will wait for the task answer.
+        $ans = $runner-&gt;run('mywebapp_memorycache', $payload);
+        if ($ans === null) { 
+            $ans = get_the_feed(); 
+            $payload = array('action' =&gt; 'put',
+                             'key' =&gt; 'my_feed',
+                             'val' =&gt; $ans, 
+                             'timeout' =&gt; 3600); // 1 hour
+            $runner-&gt;run('mywebapp_memorycache', $payload);
+        }
+        return new \photon\http\Response($ans);
+    }
+}
+</code></pre>
+
+<p>Simple... you just created a memory cache daemon which will be
+available to the 3 photon processes running at the moment.</p>
+
+<p>But, you can see that in your request, the <code>get_the_feed()</code> call is
+going to take time, so, the better way would be to create an
+asynchronous task to retrieve the feed, store the result in memory for
+one year and store in another key the age of the feed. If the feed is
+older than 1h, trigger the asynchronous task to refresh the feed and
+push it in the memory cache. You just need to control that if 30
+clients are triggering the retrieval of the feed, only one is
+performed per hour. This is easy as you would have only one task
+running to refresh the feed.</p>
+
+<p>Now, I hope you understand how easy it is to write tasks and use
+them. Also, you can start to think your application in a way to
+provide maximal speed to your end users.</p>
+
+  </div></div>
+  <div class="grid_3">
+    
+    <div id="docmenu">
+      <h4>Other Documentation</h4>
+      <p>
+	&raquo;&nbsp;<a href="project.html">Project structure</a><br />
+	&raquo;&nbsp;<a href="coding-conventions.html">Coding standards</a><br />
+	&raquo;&nbsp;<a href="configuration.html">configuration</a><br />
+	&raquo;&nbsp;<a href="lifecycle.html">lifecycle</a><br />
+	&raquo;&nbsp;<a href="principles.html">principles</a><br />
+	&raquo;&nbsp;<a href="session.html">session</a><br />
+	&raquo;&nbsp;<a href="storage.html">storage</a><br />
+
+	&raquo;&nbsp;<a href="testing.html">testing</a><br />
+
+	&raquo;&nbsp;<a href="tasks.html">Background Tasks</a><br />
+	&raquo;&nbsp;<a href="performance.html">Performance benchmark</a><br />
+      </p>
+    </div>
+    
+  </div>
+</div>
+
+<div id="footer">
+  <div class="container_12">
+    <div class="grid_9 suffix_3">
+      <p>©&nbsp;2014 <a href="../about.html">Céondo Ltd</a> and contributors.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

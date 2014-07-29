@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> - Documentation - Photon, High Performance PHP &amp; Mongrel2 Framework</title>
+<meta charset="utf-8">
+<meta name="description" content="A high performance PHP5 framework using Mongrel2 and ZeroMQ.">
+<link href="http://fonts.googleapis.com/css?family=Josefin+Sans:bold" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="../media/css/merged.css" />
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-408943-17']);
+  _gaq.push(['_setDomainName', '.photon-project.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="container_12">
+  <div class="grid_9"><div class="wrapper">
+      <div class="tabs">
+<ul>
+<li><a href="../index.html">Home</a></li>
+<li><a href="../download.html">Download</a></li>
+<li class="active"><a href="../doc.html">Documentation</a></li>
+<li><a href="../community.html">Community</a></li>
+<li><a href="../about.html">About</a></li>
+</ul>
+</div>
+
+      
+      <p>By Loïc d'Anterroches, <a href="http://xhtml.net">xhtml.net</a>, 18th of February, 2011</p>
+
+<h1>hnu, the Command Line Manager</h1>
+
+<p>Photon has the symbol hν, this is why the Photon manager is hnu.</p>
+
+<h2>Some Quick Reminders</h2>
+
+<ul>
+<li>Test your project: <code>hnu runtests</code></li>
+<li>Test your project with HTML code coverage: <code>hnu runtests --coverage-html=/tmp/photon</code></li>
+<li>Photon integrity check: <code>hnu selftest</code></li>
+<li>Start the development server:  <code>hnu testserver</code> (not a daemon, no tasks).</li>
+</ul>
+
+<h2>Command Line Use of Photon</h2>
+
+<p>To ease the use and the development with <strong>Photon</strong> the <code>hnu</code> utility
+is provided. <code>hnu</code> is fully self documented:</p>
+
+<pre><code>$ hnu
+No command entered, nothing to do.
+Photon command line manager.
+
+Usage:
+  hnu [options]
+  hnu [options] &lt;command&gt; [options] [args]
+
+Options:
+  -v, --verbose         turn on verbose output
+  --conf=path/conf.php  where the configuration is to be found. By default,
+                        the configuration file is the config.php in the
+                        current working directory
+  -h, --help            show this help message and exit
+  --version             show the program version and exit
+
+Commands:
+  init        generate the skeleton of a new Photon project in the current
+              folder
+  testserver  run the development server to test your application
+  runtests    run the tests of your project. Uses config.test.php as
+              default config file
+  selftest    run the Photon self test procedure
+  server      run or command the Photon servers
+</code></pre>
+
+<p>For example, if you want to have some help on the <code>server</code> command, just run:</p>
+
+<pre><code>$ hnu server -h
+run or command the Photon servers
+
+Usage:
+  hnu [options] server [options]
+  hnu [options] server [options] &lt;command&gt; [options]
+
+Options:
+  --all           run the subcommand for all the running Photon processes
+  --server-id=id  run the subcommand for the given server id. If you start
+                  a process, it will receive this server id. The default
+                  subcommand is "start".
+  --wait=timeout  waiting time in seconds for the answers. Needed if your
+                  servers are under heavy load
+  -h, --help      show this help message and exit
+
+Commands:
+  start       start a Photon server
+  stop        stop one or more Photon server
+  new         start a new Photon server child
+  less        stop the oldest Photon server child
+  list        list the running Photon servers
+  childstart  used internal to fork worker children
+</code></pre>
+
+  </div></div>
+  <div class="grid_3">
+    
+    <div id="docmenu">
+      <h4>Other Documentation</h4>
+      <p>
+	&raquo;&nbsp;<a href="project.html">Project structure</a><br />
+	&raquo;&nbsp;<a href="coding-conventions.html">Coding standards</a><br />
+	&raquo;&nbsp;<a href="configuration.html">configuration</a><br />
+	&raquo;&nbsp;<a href="lifecycle.html">lifecycle</a><br />
+	&raquo;&nbsp;<a href="principles.html">principles</a><br />
+	&raquo;&nbsp;<a href="session.html">session</a><br />
+	&raquo;&nbsp;<a href="storage.html">storage</a><br />
+
+	&raquo;&nbsp;<a href="testing.html">testing</a><br />
+
+	&raquo;&nbsp;<a href="tasks.html">Background Tasks</a><br />
+	&raquo;&nbsp;<a href="performance.html">Performance benchmark</a><br />
+      </p>
+    </div>
+    
+  </div>
+</div>
+
+<div id="footer">
+  <div class="container_12">
+    <div class="grid_9 suffix_3">
+      <p>©&nbsp;2014 <a href="../about.html">Céondo Ltd</a> and contributors.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

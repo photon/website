@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> - Documentation - Photon, High Performance PHP &amp; Mongrel2 Framework</title>
+<meta charset="utf-8">
+<meta name="description" content="A high performance PHP5 framework using Mongrel2 and ZeroMQ.">
+<link href="http://fonts.googleapis.com/css?family=Josefin+Sans:bold" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="../media/css/merged.css" />
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-408943-17']);
+  _gaq.push(['_setDomainName', '.photon-project.com']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="container_12">
+  <div class="grid_9"><div class="wrapper">
+      <div class="tabs">
+<ul>
+<li><a href="../index.html">Home</a></li>
+<li><a href="../download.html">Download</a></li>
+<li class="active"><a href="../doc.html">Documentation</a></li>
+<li><a href="../community.html">Community</a></li>
+<li><a href="../about.html">About</a></li>
+</ul>
+</div>
+
+      
+      <p>By Loïc d'Anterroches, <a href="http://xhtml.net">xhtml.net</a>, 25th of February, 2011</p>
+
+<h1>Photon Life Cycle</h1>
+
+<p>We will try here to explain the life cycle of a request handled by Photon. This is a work in progress.</p>
+
+<h2>Life Cycle of the Photon Application Server</h2>
+
+<p>Photon is not following the traditional PHP approach of providing a
+clean state for each new request. Photon is providing an application
+server in which your application is loaded. The application server
+runs all the time and follow this life cycle:</p>
+
+<ol>
+<li>Startup sequence to load the configuration and register itself
+against Mongrel2. </li>
+<li>Wait for a request from Mongrel2.</li>
+<li>Process the request and possibly send a couple of answers or push jobs in the background tasks.</li>
+<li>Post request clean up.</li>
+<li>Depending of external signals or internal state, shutdown.</li>
+<li>Go back to step 2 to wait for another request.</li>
+</ol>
+
+<h2>A Daemon Means</h2>
+
+<p>Taking care of the resources. This is not something people in the PHP
+world are used to do as the traditional model is to trash everything
+after a request, but you can think of it as optimization. Just do the
+necessarily work and nothing more. At the end, clean after yourself.</p>
+
+<p>Here are examples of what to pay attention at:</p>
+
+<ul>
+<li><p>The global objects, if you change something at request 1, it will be
+available at request 2. For example, simply declare <code>global $counter</code>, 
+increment it and display it in your view. You will see 1,
+2, 3 etc. until you restart the server where it will go back to 1.
+State preservation between requests allows us to load the
+configuration only once, create some database connections only once,
+etc. This allows us to not do again and again the same things. You
+spare CPU cycles and this is good™.</p></li>
+<li><p>Long running queries. The server is a single process, single thread
+daemon. That is, if your view requires 250ms to render, you are
+blocking other concurrent connections while rendering for 1/4 of a
+second. Note that this is the same for PHP as fastcgi, usually it is
+starting 10 children processes to cope with the concurrency. You can
+run hundreds of Photon servers behind Mongrel2 to serve your
+application, but if you run just a couple of them on a small VPS,
+you need to be aware of this in the case of a slashdotting of your
+website. Note that this approach has the great advantage of
+preventing your server to be overloaded, Mongrel2 will simply very
+efficiently pool the requests for you.</p></li>
+</ul>
+
+  </div></div>
+  <div class="grid_3">
+    
+    <div id="docmenu">
+      <h4>Other Documentation</h4>
+      <p>
+	&raquo;&nbsp;<a href="project.html">Project structure</a><br />
+	&raquo;&nbsp;<a href="coding-conventions.html">Coding standards</a><br />
+	&raquo;&nbsp;<a href="configuration.html">configuration</a><br />
+	&raquo;&nbsp;<a href="lifecycle.html">lifecycle</a><br />
+	&raquo;&nbsp;<a href="principles.html">principles</a><br />
+	&raquo;&nbsp;<a href="session.html">session</a><br />
+	&raquo;&nbsp;<a href="storage.html">storage</a><br />
+
+	&raquo;&nbsp;<a href="testing.html">testing</a><br />
+
+	&raquo;&nbsp;<a href="tasks.html">Background Tasks</a><br />
+	&raquo;&nbsp;<a href="performance.html">Performance benchmark</a><br />
+      </p>
+    </div>
+    
+  </div>
+</div>
+
+<div id="footer">
+  <div class="container_12">
+    <div class="grid_9 suffix_3">
+      <p>©&nbsp;2014 <a href="../about.html">Céondo Ltd</a> and contributors.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

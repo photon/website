@@ -17,4 +17,9 @@ return array(
     'log_handlers' => array(
         '\photon\log\ConsoleBackend',
     ),
+    
+    // Template
+    'template_folders' => array(
+        'template',
+    ),
 );

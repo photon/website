@@ -1,6 +1,7 @@
 {
+    "minimum-stability": "dev",
     "require": {
-        "photon/photon": "dev-develop",
+        "photon/photon": "~0.3",
         "michelf/php-markdown": "1.4.x"
     }
 }

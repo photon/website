@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1bc064a41e0ca74a1f18342caa109c89",
+    "hash": "04e4493f3aebc75707d384420506917b",
     "packages": [
         {
             "name": "michelf/php-markdown",
-            "version": "1.4.1",
+            "version": "dev-lib",
             "source": {
                 "type": "git",
                 "url": "https://github.com/michelf/php-markdown.git",
-                "reference": "de9a19c7bf352d41cc99ed86c3c0ef17e87394b6"
+                "reference": "1b5a30e13974b490964a1610bab5958e83cd4b69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/michelf/php-markdown/zipball/de9a19c7bf352d41cc99ed86c3c0ef17e87394b6",
-                "reference": "de9a19c7bf352d41cc99ed86c3c0ef17e87394b6",
+                "url": "https://api.github.com/repos/michelf/php-markdown/zipball/1b5a30e13974b490964a1610bab5958e83cd4b69",
+                "reference": "1b5a30e13974b490964a1610bab5958e83cd4b69",
                 "shasum": ""
             },
             "require": {
@@ -55,7 +55,115 @@
             "keywords": [
                 "markdown"
             ],
-            "time": "2014-05-05 02:43:50"
+            "time": "2014-12-08 02:09:55"
+        },
+        {
+            "name": "pear/console_commandline",
+            "version": "dev-trunk",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pear/Console_CommandLine.git",
+                "reference": "f139acf31e60743ba3ebafbde287ec8658a27591"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pear/Console_CommandLine/zipball/f139acf31e60743ba3ebafbde287ec8658a27591",
+                "reference": "f139acf31e60743ba3ebafbde287ec8658a27591",
+                "shasum": ""
+            },
+            "require": {
+                "pear/pear_exception": "*",
+                "php": ">=5.1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Console": "./"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "include-path": [
+                ""
+            ],
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Richard Quadling",
+                    "email": "rquadling@gmail.com"
+                },
+                {
+                    "name": "David Jean Louis",
+                    "email": "izimobil@gmail.com"
+                }
+            ],
+            "description": "A full featured command line options and arguments parser.",
+            "homepage": "https://github.com/pear/Console_CommandLine",
+            "keywords": [
+                "console"
+            ],
+            "time": "2014-04-12 16:57:03"
+        },
+        {
+            "name": "pear/pear_exception",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pear/PEAR_Exception.git",
+                "reference": "d5a3e9597040dcc56a4a2053a605e07214951202"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pear/PEAR_Exception/zipball/d5a3e9597040dcc56a4a2053a605e07214951202",
+                "reference": "d5a3e9597040dcc56a4a2053a605e07214951202",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=4.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "*"
+            },
+            "type": "class",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "PEAR": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "include-path": [
+                "."
+            ],
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Helgi Thormar",
+                    "email": "dufuz@php.net",
+                    "role": "Lead"
+                },
+                {
+                    "name": "Greg Beaver",
+                    "email": "cellog@php.net",
+                    "role": "Helper"
+                }
+            ],
+            "description": "The PEAR Exception base class.",
+            "homepage": "https://github.com/pear/PEAR_Exception",
+            "keywords": [
+                "exception"
+            ],
+            "time": "2014-02-21 17:39:41"
         },
         {
             "name": "photon/photon",
@@ -63,18 +171,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/photon/photon.git",
-                "reference": "66f4a2ad7fdd78b3f6f396bc7533d0dcda6898ab"
+                "reference": "545975fea411728fc25bdd047fec5e6e14b9e387"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/photon/photon/zipball/66f4a2ad7fdd78b3f6f396bc7533d0dcda6898ab",
-                "reference": "66f4a2ad7fdd78b3f6f396bc7533d0dcda6898ab",
+                "url": "https://api.github.com/repos/photon/photon/zipball/545975fea411728fc25bdd047fec5e6e14b9e387",
+                "reference": "545975fea411728fc25bdd047fec5e6e14b9e387",
                 "shasum": ""
             },
             "require": {
-                "ext-http": ">=1.7.6",
+                "ext-http": ">=1.7.5",
                 "ext-xdebug": ">=2.1.0",
-                "ext-zmq": ">=1.1.2",
+                "ext-zmq": ">=1.0.5",
+                "pear/console_commandline": "dev-trunk",
                 "php": ">=5.3.0"
             },
             "require-dev": {
@@ -84,7 +193,15 @@
                 "pear/Mail": "Send mail in photon project",
                 "pear/Mail_Mime": "Send mail in photon project"
             },
+            "bin": [
+                "scripts/hnu"
+            ],
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-develop": "0.4.x-dev"
+                }
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "LGPL-2.1"
@@ -96,13 +213,13 @@
                     "role": "Developer"
                 },
                 {
-                    "name": "William MARTIN",
-                    "email": "wysman@gmail.com",
-                    "role": "Developer"
-                },
-                {
                     "name": "Community",
                     "homepage": "http://projects.ceondo.com/p/photon/source/tree/master/CONTRIBUTORS.md"
+                },
+                {
+                    "name": "William MARTIN",
+                    "email": "william.martin@power-lan.com",
+                    "role": "Developer"
                 }
             ],
             "description": "Photon is a high performance micro PHP framework.",
@@ -112,24 +229,15 @@
                 "photon",
                 "zmq"
             ],
-            "time": "2014-07-28 20:38:39"
+            "time": "2015-01-08 15:40:07"
         }
     ],
-    "packages-dev": [
-
-    ],
-    "aliases": [
-
-    ],
-    "minimum-stability": "stable",
-    "stability-flags": {
-        "photon/photon": 20
-    },
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": [],
     "prefer-stable": false,
-    "platform": [
-
-    ],
-    "platform-dev": [
-
-    ]
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
 }

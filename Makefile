@@ -26,6 +26,6 @@ update: static
 	cd $(STATIC)/gh-pages && git add .
 	cd $(STATIC)/gh-pages && git commit -m "Website update, `date -u`"
 	cd $(STATIC)/gh-pages && git push origin gh-pages:gh-pages
-	# This line push to orign which is a local girt repo in $(PWD)
+	# This line push to orign which is a local git repo in $(PWD)
 
 .PHONY: clean static start stop
